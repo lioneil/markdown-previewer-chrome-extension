@@ -84,7 +84,7 @@ cd markdown-previewer-chrome-extension
 npm install
 
 # Build for production
-npm run build
+npm run package
 ```
 
 Then load the extension:
