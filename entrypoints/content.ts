@@ -9,7 +9,7 @@ import 'katex/dist/katex.min.css';
 import '@mdit/plugin-alert/style';
 import '@/assets/content.css';
 
-const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M593.8 59.1H46.2C20.7 59.1 0 79.8 0 105.2v301.5c0 25.5 20.7 46.2 46.2 46.2h547.7c25.5 0 46.2-20.7 46.1-46.1V105.2c0-25.4-20.7-46.1-46.2-46.1zM338.5 360.6H277v-120l-61.5 76.9-61.5-76.9v120H92.3V151.4h61.5l61.5 76.9 61.5-76.9h61.5v209.2zm135.3 3.1L381.5 256H443V151.4h61.5V256H566z"/></svg>`;
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62"><path d="M62,12.377l-0,37.246c-0,6.831 -5.546,12.377 -12.377,12.377l-49.623,-0l0,-49.623c0,-6.831 5.546,-12.377 12.377,-12.377l37.246,-0c6.831,-0 12.377,5.546 12.377,12.377Zm-57.151,30.534l7.007,0l-0,-13.663l7.006,8.759l7.007,-8.759l0,13.663l7.007,0l-0,-23.822l-7.007,-0l-7.007,8.758l-7.006,-8.758l-7.007,-0l0,23.822Zm43.792,0l10.51,-11.561l-7.007,0l0,-12.261l-7.006,-0l-0,12.261l-7.007,0l10.51,11.561Z"/></svg>`;
 
 const iconCopy = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
 const iconCheck = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
