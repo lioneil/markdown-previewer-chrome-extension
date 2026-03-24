@@ -1,5 +1,7 @@
 # Markdown Previewer
 
+![Markdown Previewer Screenshot](docs/screenshot-1.png)
+
 A Chrome (and Chromium derivatives) extension that renders local `.md` files beautifully — right in the browser.
 
 Open any markdown file via `file://` and get GitHub-style rendering with a navigable outline, Mermaid diagrams, syntax highlighting, interactive checkboxes, and dark mode.
