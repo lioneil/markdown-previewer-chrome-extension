@@ -1,0 +1,43 @@
+{
+  "name": "markdown-previewer-chrome-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension to preview local markdown files",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "lint": "tsc --noEmit",
+    "package": "wxt build && cd .output/chrome-mv3 && zip -r ../../markdown-previewer.zip ."
+  },
+  "keywords": [
+    "chrome-extension",
+    "markdown",
+    "previewer"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@mdit/plugin-alert": "^0.23.1",
+    "@traptitech/markdown-it-katex": "^3.6.0",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.39",
+    "markdown-it": "^14.1.1",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-emoji": "^3.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-mark": "^4.0.0",
+    "markdown-it-multimd-table": "^4.2.3",
+    "markdown-it-sub": "^2.0.0",
+    "markdown-it-sup": "^2.0.0",
+    "markdown-it-table-of-contents": "^1.1.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "mermaid": "^11.13.0",
+    "wxt": "^0.20.20"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/markdown-it-emoji": "^3.0.1",
+    "@types/markdown-it-footnote": "^3.0.4",
+    "typescript": "^5.9.3"
+  }
+}

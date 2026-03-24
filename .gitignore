@@ -1,0 +1,9 @@
+node_modules/
+tasks/
+test-fixtures/
+.output/
+.wxt/
+*.zip
+.DS_Store
+.idea/
+*.mov
