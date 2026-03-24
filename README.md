@@ -121,8 +121,6 @@ Settings and preferences are stored in `chrome.storage.sync`, so they follow you
 - **Storage** — persist theme, plugin settings, and UI preferences
 - **Downloads** — save modified files when checkboxes are toggled
 
-No data leaves your machine. No network requests. No analytics.
-
 ## Built With
 
 - [WXT](https://wxt.dev/) — Vite-based browser extension framework
