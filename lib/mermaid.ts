@@ -19,6 +19,36 @@ async function renderContainers(
       startOnLoad: false,
       theme: theme === 'dark' ? 'dark' : 'default',
       fontFamily: '-apple-system, "system-ui", "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+      gantt: {
+        useMaxWidth: false,
+        useWidth: 1200,
+        leftPadding: 250,
+        rightPadding: 100,
+        topPadding: 60,
+        barHeight: 24,
+        barGap: 6,
+        fontSize: 13,
+        sectionFontSize: 14,
+      },
+      pie: {
+        useMaxWidth: false,
+        useWidth: 1200,
+        textPosition: 0.85,
+      },
+      xyChart: {
+        useMaxWidth: false,
+        width: 1200,
+        height: 600,
+        xAxis: {
+          labelPadding: 15,
+          titlePadding: 20,
+        },
+        yAxis: {
+          labelPadding: 15,
+          titlePadding: 60,
+        },
+        plotReservedSpacePercent: 60,
+      },
     });
     lastInitTheme = theme;
   }
@@ -33,6 +63,19 @@ async function renderContainers(
       const id = `mermaid-${idCounter++}`;
       const { svg } = await mermaid.render(id, source);
       container.innerHTML = svg;
+
+      // Mermaid sometimes computes a viewBox that clips content (e.g. long
+      // pie chart titles). Expand the viewBox to fit all rendered elements.
+      const svgEl = container.querySelector('svg');
+      if (svgEl) {
+        const bbox = svgEl.getBBox();
+        const pad = 10;
+        svgEl.setAttribute(
+          'viewBox',
+          `${bbox.x - pad} ${bbox.y - pad} ${bbox.width + pad * 2} ${bbox.height + pad * 2}`,
+        );
+      }
+
       container.classList.add('rendered');
     } catch {
       container.innerHTML = `

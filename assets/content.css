@@ -797,10 +797,11 @@ body.md-preview.font-serif .md-sidebar {
   margin: 0 0 20px;
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 0;
 }
 
 .md-body .mermaid-container svg {
-  max-width: 100%;
   height: auto;
 }
 
