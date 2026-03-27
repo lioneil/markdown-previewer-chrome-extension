@@ -56,8 +56,11 @@ body {
 .popup-icon {
   width: 22px;
   height: auto;
-  color: var(--color-text);
   flex-shrink: 0;
+}
+
+[data-theme="dark"] .popup-icon {
+  filter: invert(1);
 }
 
 .popup-title {

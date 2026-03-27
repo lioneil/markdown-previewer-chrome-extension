@@ -7,7 +7,8 @@
     "dev": "wxt",
     "build": "wxt build",
     "lint": "tsc --noEmit",
-    "package": "wxt build && cd .output/chrome-mv3 && zip -r ../../output.zip ."
+    "package": "wxt build && cd .output/chrome-mv3 && zip -r ../../output.zip .",
+    "generate-icons": "node -e \"const sharp=require('sharp'),fs=require('fs'),svg=fs.readFileSync('logo.svg');[16,32,48,128].forEach(s=>sharp(svg).resize(s,s).png().toFile('public/icons/icon-'+s+'.png').then(()=>console.log('icon-'+s+'.png')))\""
   },
   "keywords": [
     "chrome-extension",
@@ -38,6 +39,7 @@
     "@types/markdown-it": "^14.1.2",
     "@types/markdown-it-emoji": "^3.0.1",
     "@types/markdown-it-footnote": "^3.0.4",
+    "sharp": "^0.34.5",
     "typescript": "^5.9.3"
   }
 }

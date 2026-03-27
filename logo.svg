@@ -1,1 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%" height="100%" viewBox="0 0 62 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><path d="M62,12.377l-0,37.246c-0,6.831 -5.546,12.377 -12.377,12.377l-49.623,-0l0,-49.623c0,-6.831 5.546,-12.377 12.377,-12.377l37.246,-0c6.831,-0 12.377,5.546 12.377,12.377Zm-57.151,30.534l7.007,0l-0,-13.663l7.006,8.759l7.007,-8.759l0,13.663l7.007,0l-0,-23.822l-7.007,-0l-7.007,8.758l-7.006,-8.758l-7.007,-0l0,23.822Zm43.792,0l10.51,-11.561l-7.007,0l0,-12.261l-7.006,-0l-0,12.261l-7.007,0l10.51,11.561Z"/></svg>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62" width="62" height="62">
+	<style>
+		.s0 { fill: #000000 } 
+		.s1 { fill: #ffffff } 
+	</style>
+	<g id="Layer 1">
+		<path id="Shape 2" fill-rule="evenodd" class="s0" d="m31 62c-17.14 0-31-13.86-31-31 0-17.14 13.86-31 31-31 17.14 0 31 13.86 31 31 0 17.14-13.86 31-31 31z"/>
+		<path id="Shape 3" fill-rule="evenodd" class="s0" d="m31 31v31h-31v-31z"/>
+		<path id="Shape 4" fill-rule="evenodd" class="s1" d="m52 19.21v26.58h-42v-26.58z"/>
+		<path fill-rule="evenodd" class="s0" d="m53.5 17.08v27.34c0 5.01-4.07 9.08-9.08 9.08h-36.42v-36.42c0-5.01 4.07-9.08 9.08-9.08h27.34c5.01 0 9.08 4.07 9.08 9.08zm-41.94 22.41h5.14v-10.03l5.14 6.43 5.14-6.43v10.03h5.15v-17.48h-5.15l-5.14 6.43-5.14-6.43h-5.14zm32.14 0l7.71-8.49h-5.14v-8.99h-5.14v8.99h-5.15z"/>
+	</g>
+</svg>
