@@ -7,7 +7,7 @@
     "dev": "wxt",
     "build": "wxt build",
     "lint": "tsc --noEmit",
-    "package": "wxt build && cd .output/chrome-mv3 && zip -r ../../markdown-previewer.zip ."
+    "package": "wxt build && cd .output/chrome-mv3 && zip -r ../../output.zip ."
   },
   "keywords": [
     "chrome-extension",
