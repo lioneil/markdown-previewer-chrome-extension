@@ -29,7 +29,7 @@ function asciiPlugin() {
 export default defineConfig({
   manifest: {
     name: 'Markdown Previewer',
-    description: 'Render local markdown files beautifully — GitHub Flavoured Markdown, Mermaid charts, code highlighting, TOC sidebar, dark mode, and interactive checkboxes.',
+    description: 'Render local markdown files beautifully — GFM, Mermaid diagrams, syntax highlighting, TOC sidebar, dark mode, and more.',
     version: '1.0.0',
     permissions: ['storage', 'downloads'],
     icons: {
