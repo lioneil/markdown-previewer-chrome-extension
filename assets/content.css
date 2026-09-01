@@ -747,9 +747,16 @@ body.md-preview.font-serif .md-sidebar {
 }
 
 /* ── Task Lists ── */
-.md-body .task-list-item {
+/* The checkbox stands in for the bullet, but an ordered list keeps its number. */
+.md-body ul.contains-task-list > .task-list-item {
   list-style: none;
   margin-left: -1.5em;
+}
+
+/* A nested task list pulls each item back by 1.5em, which all but cancels the
+   2em list padding. Widen it so the child still steps in from its parent. */
+.md-body li > ul.contains-task-list {
+  padding-left: 3.2em;
 }
 
 .md-body .task-list-item input[type="checkbox"] {
