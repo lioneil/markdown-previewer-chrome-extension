@@ -30,7 +30,7 @@ export default defineConfig({
   manifest: {
     name: 'Markdown Previewer',
     description: 'Render local markdown files beautifully — GFM, Mermaid diagrams, syntax highlighting, TOC sidebar, dark mode, and more.',
-    version: '1.0.0',
+    // version comes from package.json, so `npm version` drives the release
     permissions: ['storage', 'downloads'],
     icons: {
       16: 'icons/icon-16.png',
