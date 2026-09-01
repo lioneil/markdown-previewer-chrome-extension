@@ -7,3 +7,4 @@ test-fixtures/
 .DS_Store
 .idea/
 *.mov
+.env.submit
