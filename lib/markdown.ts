@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it';
+import type StateCore from 'markdown-it/lib/rules_core/state_core.mjs';
 import hljs from 'highlight.js';
 import taskLists from 'markdown-it-task-lists';
 import footnote from 'markdown-it-footnote';
@@ -52,6 +53,23 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
   });
 
   md.use(taskLists, { enabled: true, label: true });
+
+  // Record the line each task item came from, so toggling a checkbox can write
+  // back to the right line without re-parsing the markdown. Runs after the task
+  // list rule, which is what tags the item with `task-list-item`.
+  md.core.ruler.push('task_list_source_lines', (state: StateCore) => {
+    for (const token of state.tokens) {
+      if (
+        token.type === 'list_item_open' &&
+        token.map &&
+        token.attrGet('class')?.includes('task-list-item')
+      ) {
+        token.attrSet('data-source-line', String(token.map[0]));
+      }
+    }
+    return true;
+  });
+
   md.use(anchor, { permalink: false });
 
   if (p.footnote) md.use(footnote);

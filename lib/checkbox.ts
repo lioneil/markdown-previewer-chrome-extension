@@ -5,7 +5,6 @@
  */
 
 interface CheckboxEntry {
-  index: number;
   lineNumber: number;
   inputEl: HTMLInputElement;
 }
@@ -15,27 +14,15 @@ let dirty = false;
 let saveBar: HTMLElement | null = null;
 
 /**
- * Build a map of rendered checkbox inputs to their source line numbers.
+ * Pair each rendered checkbox with the source line the renderer recorded on its
+ * list item. The renderer is the only thing that knows which lines are really
+ * task items, so ordered lists, blockquotes and fenced code all come out right.
  */
-function buildCheckboxMap(rawMarkdown: string, inputs: NodeListOf<HTMLInputElement>): CheckboxEntry[] {
-  const lines = rawMarkdown.split('\n');
-  const entries: CheckboxEntry[] = [];
-  let inputIndex = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-    if (/^\s*[-*+]\s+\[([ xX])\]/.test(lines[i])) {
-      if (inputIndex < inputs.length) {
-        entries.push({
-          index: inputIndex,
-          lineNumber: i,
-          inputEl: inputs[inputIndex],
-        });
-        inputIndex++;
-      }
-    }
-  }
-
-  return entries;
+function collectCheckboxes(inputs: NodeListOf<HTMLInputElement>): CheckboxEntry[] {
+  return [...inputs].flatMap((inputEl) => {
+    const line = inputEl.closest('.task-list-item')?.getAttribute('data-source-line');
+    return line == null ? [] : [{ lineNumber: Number(line), inputEl }];
+  });
 }
 
 /**
@@ -161,7 +148,7 @@ export function initCheckboxes(rawMarkdown: string): void {
     input.style.cursor = 'pointer';
   });
 
-  const entries = buildCheckboxMap(rawMarkdown, inputs);
+  const entries = collectCheckboxes(inputs);
 
   // Create save bar (hidden, ready to animate)
   saveBar = createSaveBar();
