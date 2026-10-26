@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markdown Previewer</title>
+<meta name="description" content="A Chrome extension that renders local Markdown files.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>
+  // Set the theme before first paint so the page never flashes the wrong one.
+  (function () {
+    var pref = 'auto';
+    try { pref = localStorage.getItem('theme') || 'auto'; } catch (e) {}
+    var dark = pref === 'dark' || (pref === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  })();
+</script>
+<style>
+  /* Colors, sizes and components are taken from the extension's own stylesheet. */
+  :root {
+    --color-bg: #FFFFFF;
+    --color-text: #1A1A1A;
+    --color-text-secondary: #4A4A4A;
+    --color-link: #4A6FA5;
+    --color-link-hover: #3A5A8A;
+    --color-on-link: #FFFFFF;
+    --color-code-bg: #EEF0F4;
+    --color-code-text: #5B6270;
+    --color-code-block-bg: #F6F8FA;
+    --color-divider: #E1E4E8;
+    --color-table-border: #D0D7DE;
+    --color-table-row-alt: #F6F8FA;
+    --color-mark-bg: #FFF3B0;
+    --color-mark-text: inherit;
+    --color-success: #1A7F37;
+    --color-alert-note-border: #0969DA;
+    --color-alert-note-bg: #DDF4FF;
+    --color-sidebar-bg: #F8F9FA;
+    --color-pressed: #E5E5E5;
+    --color-toggle-bg: #D0D7DE;
+    --content-max-width: 800px;
+    --sidebar-width: 260px;
+    --font-sans: -apple-system, "system-ui", "Segoe UI", Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --font-serif: Georgia, "Times New Roman", "Noto Serif", serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    --color-bg: #1E1E1E;
+    --color-text: #D4D4D4;
+    --color-text-secondary: #8B8B8B;
+    --color-link: #6CA4E0;
+    --color-link-hover: #8FBFEE;
+    --color-on-link: #1E1E1E;
+    --color-code-bg: #2D2D2D;
+    --color-code-text: #9CAAB8;
+    --color-code-block-bg: #252525;
+    --color-divider: #3E3E3E;
+    --color-table-border: #3E3E3E;
+    --color-table-row-alt: #252525;
+    --color-mark-bg: #5C4B00;
+    --color-mark-text: #F0E0A0;
+    --color-success: #3FB950;
+    --color-alert-note-border: #388BFD;
+    --color-alert-note-bg: #1A2332;
+    --color-sidebar-bg: #161616;
+    --color-pressed: #2A2A2A;
+    --color-toggle-bg: #4A4A4A;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { background: var(--color-bg); }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.font-serif .md-body { font-family: var(--font-serif); line-height: 1.7; }
+
+  :focus-visible { outline: 2px solid var(--color-link); outline-offset: 2px; }
+
+  button { font: inherit; }
+
+  /* Sidebar */
+  .md-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-sidebar-bg);
+    border-right: 1px solid var(--color-divider);
+    z-index: 10;
+    overflow: hidden;
+    transition: width 0.25s;
+  }
+
+  .md-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 0.75em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+  }
+
+  .md-sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 12px 12px;
+  }
+
+  .md-sidebar-root {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .md-sidebar-chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    transform: rotate(90deg);
+  }
+
+  .md-sidebar-children { padding-left: 20px; }
+
+  .md-sidebar-link {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
+    margin-bottom: 2px;
+    font-size: 0.8125em;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .md-sidebar-link:hover { color: var(--color-text); background: var(--color-code-bg); }
+
+  .md-sidebar-link.active { color: var(--color-link); background: var(--color-code-bg); font-weight: 600; }
+
+  .md-sidebar-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--color-divider);
+  }
+
+  .toolbar-btn,
+  .md-sidebar-collapse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+  }
+
+  .md-sidebar-collapse { width: 28px; height: 28px; border-radius: 4px; }
+
+  .toolbar-btn:hover,
+  .md-sidebar-collapse:hover,
+  .toolbar-btn-grouped:hover:not(.disabled) { background: var(--color-code-bg); color: var(--color-text); }
+
+  .toolbar-btn:active,
+  .md-sidebar-collapse:active,
+  .toolbar-btn-grouped:active:not(.disabled) {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.25);
+    background-color: var(--color-pressed);
+  }
+
+  .toolbar-btn-group {
+    display: flex;
+    margin-left: auto;
+    border: 1px solid var(--color-divider);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .toolbar-btn-grouped {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+  }
+
+  .toolbar-btn-grouped:first-child { border-right: 1px solid var(--color-divider); }
+
+  .toolbar-btn-grouped.disabled { opacity: 0.3; cursor: default; }
+
+  /* Collapsed sidebar: a narrow rail with the controls stacked. */
+  .md-sidebar.collapsed { width: 48px; }
+  .md-sidebar.collapsed .md-sidebar-header { justify-content: center; padding: 12px 0; }
+  .md-sidebar.collapsed .md-sidebar-header span { display: none; }
+  .md-sidebar.collapsed .md-sidebar-nav { visibility: hidden; }
+  .md-sidebar.collapsed .md-sidebar-toolbar { flex-direction: column; padding: 8px 0; }
+  .md-sidebar.collapsed .toolbar-btn-group { flex-direction: column; margin-left: 0; }
+  .md-sidebar.collapsed .toolbar-btn-grouped:first-child { border-right: none; border-bottom: 1px solid var(--color-divider); }
+
+  /* Document */
+  .md-content {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+    padding: 72px 24px 48px;
+    transition: margin-left 0.25s;
+  }
+
+  .md-sidebar.collapsed ~ .md-content { margin-left: 48px; }
+
+  .md-body { width: 100%; max-width: var(--content-max-width); }
+
+  body.wide-mode .md-body { max-width: 100%; }
+
+  .md-body .logo { display: block; width: 44px; height: 44px; margin: 0 0 24px; color: var(--color-text); }
+
+  .md-body h1 {
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1.25;
+    border-bottom: 1px solid var(--color-divider);
+  }
+
+  .md-body h2 {
+    margin: 48px 0 20px;
+    padding-bottom: 8px;
+    font-size: 1.5em;
+    font-weight: 700;
+    line-height: 1.3;
+    border-bottom: 1px solid var(--color-divider);
+    scroll-margin-top: 24px;
+  }
+
+  .md-body p { margin: 0 0 20px; }
+
+  .md-body a { color: var(--color-link); text-decoration: none; }
+  .md-body a:hover { color: var(--color-link-hover); text-decoration: underline; }
+
+  .md-body code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--color-code-bg);
+    color: var(--color-code-text);
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    overflow-wrap: break-word;
+  }
+
+  .md-body ul, .md-body ol { margin: 0 0 20px; padding-left: 2em; }
+  .md-body li { margin-bottom: 6px; }
+
+  .md-body ul.contains-task-list { list-style: none; padding-left: 0.5em; }
+  .md-body .task-list-item input { margin: 0 8px 0 0; vertical-align: middle; accent-color: var(--color-link); }
+  .md-body .task-list-item label { cursor: pointer; }
+
+  .md-body mark {
+    padding: 1px 4px;
+    border-radius: 2px;
+    background: var(--color-mark-bg);
+    color: var(--color-mark-text);
+  }
+
+  .md-body hr { margin: 48px 0 24px; border: none; border-top: 1px solid var(--color-divider); }
+
+  /* The screenshots carry a transparent margin for their shadow, so widen them to line the window up with the text. */
+  .md-body .screenshot { display: block; width: 106.4%; max-width: none; height: auto; margin: 8px 0 0 -3.2%; }
+  .md-body .screenshot-dark,
+  [data-theme="dark"] .md-body .screenshot-light { display: none; }
+  [data-theme="dark"] .md-body .screenshot-dark { display: block; }
+
+  /* The two links at the top use the extension's save bar buttons. */
+  .md-body .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 32px; font-family: var(--font-sans); }
+
+  .md-body .button {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 20px;
+    border: 1px solid var(--color-link);
+    border-radius: 6px;
+    background: var(--color-link);
+    color: var(--color-on-link);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .md-body .button:hover { color: var(--color-on-link); background: var(--color-link-hover); border-color: var(--color-link-hover); text-decoration: none; }
+
+  .md-body .button-quiet { background: none; border-color: var(--color-divider); color: var(--color-text-secondary); }
+  .md-body .button-quiet:hover { background: none; border-color: var(--color-divider); color: var(--color-text); }
+
+  /* Code block with the extension's language label and copy button */
+  .md-body .code-block { position: relative; margin: 12px 0 16px; }
+
+  .md-body .code-block pre {
+    margin: 0;
+    padding: 36px 16px 16px;
+    border-radius: 6px;
+    background: var(--color-code-block-bg);
+    overflow-x: auto;
+  }
+
+  .md-body .code-block pre { white-space: pre-wrap; word-break: break-all; }
+
+  .md-body .code-block code { padding: 0; background: none; color: var(--color-text); font-size: 0.875em; line-height: 1.5; }
+
+  .md-body .code-lang {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+    font-family: var(--font-sans);
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    user-select: none;
+  }
+
+  .md-body .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--color-divider);
+    border-radius: 6px;
+    background: var(--color-code-block-bg);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .md-body .copy-btn:hover { color: var(--color-text); }
+  .md-body .copy-btn.copied { color: var(--color-success); border-color: var(--color-success); }
+  .md-body .copy-icon { grid-area: 1 / 1; display: flex; transition: opacity 0.15s ease, transform 0.15s ease; }
+  .md-body .copy-icon-check { opacity: 0; transform: scale(0.7); }
+  .md-body .copy-icon-check path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .md-body .copy-btn.copied .copy-icon-copy { opacity: 0; transform: scale(0.7); }
+  .md-body .copy-btn.copied .copy-icon-check { opacity: 1; transform: scale(1); }
+  .md-body .copy-btn.copied .copy-icon-check path { animation: copy-check-draw 0.32s ease forwards; }
+  @keyframes copy-check-draw { to { stroke-dashoffset: 0; } }
+
+  /* GitHub-style note alert */
+  .md-body .markdown-alert {
+    margin: 0 0 20px;
+    padding: 8px 16px;
+    border-left: 4px solid var(--color-alert-note-border);
+    border-radius: 4px;
+    background: var(--color-alert-note-bg);
+  }
+
+  .md-body .markdown-alert p { margin: 0 0 8px; }
+  .md-body .markdown-alert p:last-child { margin-bottom: 0; }
+
+  .md-body .markdown-alert-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--color-alert-note-border);
+  }
+
+  .md-body .markdown-alert-title::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E") no-repeat center / contain;
+    mask: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E") no-repeat center / contain;
+  }
+
+  /* Table */
+  .md-body .table-wrapper { margin: 0 0 20px; overflow-x: auto; }
+  .md-body table { width: 100%; border-collapse: collapse; }
+  .md-body th, .md-body td { padding: 8px 12px; border: 1px solid var(--color-table-border); text-align: left; }
+  .md-body th { font-weight: 700; background: var(--color-code-block-bg); }
+  .md-body tr:nth-child(even) { background: var(--color-table-row-alt); }
+  .md-body td:first-child { white-space: nowrap; }
+
+  .md-body .footer { color: var(--color-text-secondary); font-size: 0.875em; }
+
+  /* Preview switch, after the "Enable preview" toggle in the extension's popup */
+  .preview-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px 6px 12px;
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Pinned only where the right margin is wide enough to keep it clear of the text. */
+  @media (min-width: 1280px) { .preview-toggle { position: fixed; } }
+
+  .toggle-switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; }
+  .toggle-input { position: absolute; width: 0; height: 0; opacity: 0; }
+  .toggle-slider { position: absolute; inset: 0; border-radius: 10px; background: var(--color-toggle-bg); transition: background-color 0.2s; }
+  .toggle-slider::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    transition: transform 0.2s;
+  }
+  .toggle-input:checked + .toggle-slider { background: var(--color-link); }
+  .toggle-input:checked + .toggle-slider::after { transform: translateX(16px); }
+  .toggle-input:focus-visible + .toggle-slider { outline: 2px solid var(--color-link); outline-offset: 2px; }
+
+  /* With the preview off, the page shows its own Markdown the way Chrome does. */
+  .md-raw {
+    display: none;
+    margin: 0;
+    padding: 8px 8px 48px;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: normal;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  body.raw .md-sidebar,
+  body.raw .md-content,
+  body.raw .checkbox-save-bar { display: none; }
+  body.raw .md-raw { display: block; }
+
+  /* Save bar, shown after a checkbox changes */
+  .checkbox-save-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border: 1px solid var(--color-divider);
+    border-radius: 10px;
+    background: var(--color-bg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 0.875em;
+    white-space: nowrap;
+    transform: translateX(-50%) translateY(calc(100% + 40px));
+    visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.35s;
+  }
+
+  [data-theme="dark"] .checkbox-save-bar { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3); }
+
+  .checkbox-save-bar.visible { transform: translateX(-50%) translateY(0); visibility: visible; }
+
+  .checkbox-save-text { margin-right: 16px; }
+
+  .checkbox-save-btn,
+  .checkbox-save-dismiss {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 0.875em;
+    cursor: pointer;
+  }
+
+  .checkbox-save-btn { border: none; background: var(--color-link); color: var(--color-on-link); }
+  .checkbox-save-btn:hover { background: var(--color-link-hover); }
+  .checkbox-save-dismiss { padding: 8px 14px; border: 1px solid var(--color-divider); background: none; color: var(--color-text-secondary); }
+  .checkbox-save-dismiss:hover { color: var(--color-text); }
+
+  @media (max-width: 760px) {
+    .md-sidebar { display: none; }
+    .md-content, .md-sidebar.collapsed ~ .md-content { margin-left: 0; padding: 72px 16px 40px; }
+    .checkbox-save-bar { left: 16px; right: 16px; transform: translateY(calc(100% + 40px)); white-space: normal; }
+    .checkbox-save-bar.visible { transform: translateY(0); }
+    .checkbox-save-text { margin-right: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+    .md-body .copy-btn.copied .copy-icon-check path { stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body class="font-serif">
+
+<aside class="md-sidebar" id="sidebar">
+  <div class="md-sidebar-header">
+    <span>OUTLINE</span>
+    <button class="md-sidebar-collapse" id="collapse" type="button"></button>
+  </div>
+  <nav class="md-sidebar-nav" aria-label="Outline">
+    <div class="md-sidebar-root">
+      <span class="md-sidebar-chevron" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      <a class="md-sidebar-link" href="#markdown-previewer">Markdown Previewer</a>
+    </div>
+    <div class="md-sidebar-children">
+      <a class="md-sidebar-link" href="#setup">Setup</a>
+      <a class="md-sidebar-link" href="#features">Features</a>
+      <a class="md-sidebar-link" href="#keyboard-shortcuts">Keyboard shortcuts</a>
+      <a class="md-sidebar-link" href="#privacy">Privacy</a>
+    </div>
+  </nav>
+  <div class="md-sidebar-toolbar">
+    <button class="toolbar-btn" id="theme" type="button"></button>
+    <button class="toolbar-btn" id="wide" type="button"></button>
+    <button class="toolbar-btn" id="font" type="button"></button>
+    <div class="toolbar-btn-group">
+      <button class="toolbar-btn-grouped" id="smaller" type="button" title="Decrease text size (Ctrl+Shift+-)" aria-label="Decrease text size"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13h6"/><path d="m2 16 4.5-9 4.5 9"/><path d="M18 16V7"/><path d="m14 11 4 4 4-4"/></svg></button>
+      <button class="toolbar-btn-grouped" id="larger" type="button" title="Increase text size (Ctrl+Shift+=)" aria-label="Increase text size"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13h6"/><path d="m2 16 4.5-9 4.5 9"/><path d="M18 7v9"/><path d="m14 12 4-4 4 4"/></svg></button>
+    </div>
+  </div>
+</aside>
+
+<main class="md-content">
+  <article class="md-body" id="rendered">
+    <svg class="logo" viewBox="0 0 62 62" role="img" aria-label="Markdown Previewer logo"><path fill="currentColor" fill-rule="evenodd" d="m31 62c-17.14 0-31-13.86-31-31 0-17.14 13.86-31 31-31 17.14 0 31 13.86 31 31 0 17.14-13.86 31-31 31z"/><path fill="currentColor" fill-rule="evenodd" d="m31 31v31h-31v-31z"/><path fill="var(--color-bg)" fill-rule="evenodd" d="m52 19.21v26.58h-42v-26.58z"/><path fill="currentColor" fill-rule="evenodd" d="m53.5 17.08v27.34c0 5.01-4.07 9.08-9.08 9.08h-36.42v-36.42c0-5.01 4.07-9.08 9.08-9.08h27.34c5.01 0 9.08 4.07 9.08 9.08zm-41.94 22.41h5.14v-10.03l5.14 6.43 5.14-6.43v10.03h5.15v-17.48h-5.15l-5.14 6.43-5.14-6.43h-5.14zm32.14 0l7.71-8.49h-5.14v-8.99h-5.14v8.99h-5.15z"/></svg>
+
+    <h1 id="markdown-previewer">Markdown Previewer</h1>
+
+    <p>A Chrome extension that renders local Markdown files.</p>
+
+    <p class="actions">
+      <a class="button" href="https://chromewebstore.google.com/detail/markdown-previewer/nccgimhmfbjfiakcapgeofcfbpkpganp">Add to Chrome</a>
+      <a class="button button-quiet" href="https://github.com/lioneil/markdown-previewer-chrome-extension">View on GitHub</a>
+    </p>
+
+    <img class="screenshot screenshot-light" src="assets/screenshot-light.webp" width="1600" height="1040" alt="A Markdown file open in Chrome, rendered by the extension, with the outline sidebar on the left">
+    <img class="screenshot screenshot-dark" src="assets/screenshot-dark.webp" width="1600" height="1040" alt="A Markdown file open in Chrome, rendered by the extension in the dark theme" loading="lazy">
+
+    <h2 id="setup">Setup</h2>
+
+    <ol>
+      <li>Install the extension from the Chrome Web Store.</li>
+      <li>Open its details page and turn on <strong>Allow access to file URLs</strong>.
+        <div class="code-block">
+          <span class="code-lang">text</span>
+          <button class="copy-btn" type="button" title="Copy code" aria-label="Copy code"><span class="copy-icon copy-icon-copy" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></span><span class="copy-icon copy-icon-check" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M4 12 9 17 20 6"/></svg></span></button>
+          <pre><code>chrome://extensions/?id=nccgimhmfbjfiakcapgeofcfbpkpganp</code></pre>
+        </div>
+      </li>
+      <li>Open a <code>.md</code> or <code>.markdown</code> file in the browser.</li>
+    </ol>
+
+    <div class="markdown-alert">
+      <p class="markdown-alert-title">Note</p>
+      <p>Works in Chrome and Brave.</p>
+    </div>
+
+    <h2 id="features">Features</h2>
+
+    <ul class="contains-task-list">
+      <li class="task-list-item"><label><input type="checkbox" checked>GitHub Flavored Markdown</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Syntax highlighting and a copy button for code blocks</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Mermaid diagrams</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>KaTeX math</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>GitHub alerts</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Tables with colspan, rowspan and multi-line cells</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Footnotes, definition lists, emoji, subscript, superscript and <mark>highlight</mark></label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Clickable checkboxes, with Save a Copy</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Outline sidebar with search</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Light, dark and auto themes</label></li>
+      <li class="task-list-item"><label><input type="checkbox" checked>Wide mode, font size and serif font controls</label></li>
+    </ul>
+
+    <h2 id="keyboard-shortcuts">Keyboard shortcuts</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Shortcut</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><code>Alt+Shift+T</code></td><td>Cycle theme</td></tr>
+          <tr><td><code>Ctrl+Shift+K</code></td><td>Toggle sidebar</td></tr>
+          <tr><td><code>Ctrl+Shift+F</code></td><td>Search outline</td></tr>
+          <tr><td><code>Ctrl+Shift+W</code></td><td>Toggle wide mode (macOS only)</td></tr>
+          <tr><td><code>Ctrl+Shift+G</code></td><td>Toggle serif font</td></tr>
+          <tr><td><code>Ctrl+Shift+=</code></td><td>Increase font size</td></tr>
+          <tr><td><code>Ctrl+Shift+-</code></td><td>Decrease font size</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="privacy">Privacy</h2>
+
+    <p>The extension makes no network requests and does not upload your files. Settings are stored in <code>chrome.storage.sync</code>.</p>
+
+    <hr>
+
+    <p class="footer">Version 1.0.2. <a href="https://github.com/lioneil/markdown-previewer-chrome-extension/blob/main/LICENSE">MIT License</a>.</p>
+  </article>
+</main>
+
+<pre class="md-raw" id="raw"></pre>
+
+<label class="preview-toggle" title="Turn off to see this page as plain Markdown">
+  Preview
+  <span class="toggle-switch">
+    <input class="toggle-input" id="preview" type="checkbox" checked>
+    <span class="toggle-slider"></span>
+  </span>
+</label>
+
+<div class="checkbox-save-bar" id="save-bar" role="status">
+  <span class="checkbox-save-text">Changes made</span>
+  <button class="checkbox-save-dismiss" id="dismiss" type="button">Dismiss</button>
+  <button class="checkbox-save-btn" id="save" type="button">Save a Copy</button>
+</div>
+
+<script type="text/markdown" id="source"># Markdown Previewer
+
+A Chrome extension that renders local Markdown files.
+
+[Add to Chrome](https://chromewebstore.google.com/detail/markdown-previewer/nccgimhmfbjfiakcapgeofcfbpkpganp)
+[View on GitHub](https://github.com/lioneil/markdown-previewer-chrome-extension)
+
+![Markdown Previewer](assets/screenshot-light.webp)
+
+## Setup
+
+1. Install the extension from the Chrome Web Store.
+2. Open its details page and turn on **Allow access to file URLs**.
+
+   ```text
+   chrome://extensions/?id=nccgimhmfbjfiakcapgeofcfbpkpganp
+   ```
+
+3. Open a `.md` or `.markdown` file in the browser.
+
+> [!NOTE]
+> Works in Chrome and Brave.
+
+## Features
+
+- [x] GitHub Flavored Markdown
+- [x] Syntax highlighting and a copy button for code blocks
+- [x] Mermaid diagrams
+- [x] KaTeX math
+- [x] GitHub alerts
+- [x] Tables with colspan, rowspan and multi-line cells
+- [x] Footnotes, definition lists, emoji, subscript, superscript and ==highlight==
+- [x] Clickable checkboxes, with Save a Copy
+- [x] Outline sidebar with search
+- [x] Light, dark and auto themes
+- [x] Wide mode, font size and serif font controls
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Alt+Shift+T` | Cycle theme |
+| `Ctrl+Shift+K` | Toggle sidebar |
+| `Ctrl+Shift+F` | Search outline |
+| `Ctrl+Shift+W` | Toggle wide mode (macOS only) |
+| `Ctrl+Shift+G` | Toggle serif font |
+| `Ctrl+Shift+=` | Increase font size |
+| `Ctrl+Shift+-` | Decrease font size |
+
+## Privacy
+
+The extension makes no network requests and does not upload your files. Settings are stored in `chrome.storage.sync`.
+
+---
+
+Version 1.0.2. [MIT License](https://github.com/lioneil/markdown-previewer-chrome-extension/blob/main/LICENSE).
+</script>
+
+<script>
+  (function () {
+    var icons = {
+      monitor: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>',
+      sun: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
+      moon: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
+      panelLeft: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>',
+      fontSans: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif" font-size="14" font-weight="600" fill="currentColor">Aa</text></svg>',
+      fontSerif: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="14" font-weight="600" fill="currentColor">Aa</text></svg>',
+      maximize: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(45deg)"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></svg>',
+      minimize: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(45deg)"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" x2="21" y1="10" y2="3"/><line x1="3" x2="10" y1="21" y2="14"/></svg>'
+    };
+
+    var store = {
+      get: function (key, fallback) { try { var v = localStorage.getItem(key); return v === null ? fallback : v; } catch (e) { return fallback; } },
+      set: function (key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+    };
+
+    var $ = function (id) { return document.getElementById(id); };
+    var body = document.body;
+    var sidebar = $('sidebar');
+    var themeBtn = $('theme'), wideBtn = $('wide'), fontBtn = $('font');
+    var smallerBtn = $('smaller'), largerBtn = $('larger'), collapseBtn = $('collapse');
+    var rendered = $('rendered');
+
+    function label(btn, text) { btn.title = text; btn.setAttribute('aria-label', text.replace(/ \(.*\)$/, '')); }
+
+    // Theme: auto follows the system, like the extension.
+    var media = matchMedia('(prefers-color-scheme: dark)');
+    var theme = store.get('theme', 'auto');
+    function applyTheme() {
+      document.documentElement.dataset.theme = theme === 'auto' ? (media.matches ? 'dark' : 'light') : theme;
+      themeBtn.innerHTML = icons[{ auto: 'monitor', light: 'sun', dark: 'moon' }[theme]];
+      label(themeBtn, 'Theme: ' + theme.charAt(0).toUpperCase() + theme.slice(1) + ' (Alt+Shift+T)');
+    }
+    function cycleTheme() {
+      theme = { auto: 'light', light: 'dark', dark: 'auto' }[theme] || 'auto';
+      store.set('theme', theme);
+      applyTheme();
+    }
+    media.addEventListener('change', function () { if (theme === 'auto') applyTheme(); });
+
+    function setWide(on) {
+      body.classList.toggle('wide-mode', on);
+      wideBtn.innerHTML = on ? icons.minimize : icons.maximize;
+      label(wideBtn, on ? 'Normal width (Ctrl+Shift+W)' : 'Wide mode (Ctrl+Shift+W)');
+      store.set('wideMode', on ? '1' : '');
+    }
+
+    function setSerif(on) {
+      body.classList.toggle('font-serif', on);
+      fontBtn.innerHTML = on ? icons.fontSerif : icons.fontSans;
+      label(fontBtn, on ? 'Font: Serif (Ctrl+Shift+G)' : 'Font: Sans-serif (Ctrl+Shift+G)');
+      store.set('fontFamily', on ? 'serif' : 'sans-serif');
+    }
+
+    var sizes = [14, 15, 16, 18, 20];
+    var size = Number(store.get('fontSize', 16));
+    if (sizes.indexOf(size) < 0) size = 16;
+    function setSize(next) {
+      size = next;
+      rendered.style.fontSize = next + 'px';
+      smallerBtn.classList.toggle('disabled', next === sizes[0]);
+      largerBtn.classList.toggle('disabled', next === sizes[sizes.length - 1]);
+      store.set('fontSize', String(next));
+    }
+    function stepSize(step) {
+      var next = sizes[sizes.indexOf(size) + step];
+      if (next) setSize(next);
+    }
+
+    function setCollapsed(on) {
+      sidebar.classList.toggle('collapsed', on);
+      label(collapseBtn, on ? 'Show sidebar (Ctrl+Shift+K)' : 'Hide sidebar (Ctrl+Shift+K)');
+      store.set('sidebarCollapsed', on ? '1' : '');
+    }
+
+    collapseBtn.innerHTML = icons.panelLeft;
+    applyTheme();
+    setWide(store.get('wideMode', '') === '1');
+    setSerif(store.get('fontFamily', 'serif') === 'serif');
+    setSize(size);
+    setCollapsed(store.get('sidebarCollapsed', '') === '1');
+
+    themeBtn.addEventListener('click', cycleTheme);
+    wideBtn.addEventListener('click', function () { setWide(!body.classList.contains('wide-mode')); });
+    fontBtn.addEventListener('click', function () { setSerif(!body.classList.contains('font-serif')); });
+    smallerBtn.addEventListener('click', function () { stepSize(-1); });
+    largerBtn.addEventListener('click', function () { stepSize(1); });
+    collapseBtn.addEventListener('click', function () { setCollapsed(!sidebar.classList.contains('collapsed')); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.altKey && e.shiftKey && !e.ctrlKey && e.code === 'KeyT') { e.preventDefault(); cycleTheme(); return; }
+      if (!(e.ctrlKey && e.shiftKey)) return;
+      var key = e.key.toUpperCase();
+      if (key === 'K') setCollapsed(!sidebar.classList.contains('collapsed'));
+      else if (key === 'W') setWide(!body.classList.contains('wide-mode'));
+      else if (key === 'G') setSerif(!body.classList.contains('font-serif'));
+      else if (key === '=' || key === '+') stepSize(1);
+      else if (key === '-' || key === '_') stepSize(-1);
+      else return;
+      e.preventDefault();
+    });
+
+    // Highlight the outline entry for the section in view.
+    var links = Array.prototype.slice.call(document.querySelectorAll('.md-sidebar-link'));
+    var headings = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    var ticking = false;
+    function spy() {
+      ticking = false;
+      var current = 0;
+      headings.forEach(function (h, i) { if (h.getBoundingClientRect().top <= innerHeight * 0.25) current = i; });
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
+      links.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+    }
+    addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
+    spy();
+
+    document.querySelectorAll('.copy-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var code = btn.parentElement.querySelector('code').textContent;
+        navigator.clipboard.writeText(code).then(function () {
+          btn.classList.add('copied');
+          label(btn, 'Copied!');
+          setTimeout(function () { btn.classList.remove('copied'); label(btn, 'Copy code'); }, 2000);
+        });
+      });
+    });
+
+    // The page's own Markdown, with the checkboxes as they are now.
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.task-list-item input'));
+    function currentSource() {
+      var i = 0;
+      return $('source').textContent.replace(/^- \[[ x]\] /gm, function () {
+        return '- [' + (boxes[i++].checked ? 'x' : ' ') + '] ';
+      });
+    }
+
+    var saveBar = $('save-bar');
+    boxes.forEach(function (box) { box.addEventListener('change', function () { saveBar.classList.add('visible'); }); });
+    $('dismiss').addEventListener('click', function () { saveBar.classList.remove('visible'); });
+    $('save').addEventListener('click', function () {
+      var url = URL.createObjectURL(new Blob([currentSource()], { type: 'text/markdown' }));
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'markdown-previewer.md';
+      a.click();
+      URL.revokeObjectURL(url);
+      saveBar.classList.remove('visible');
+    });
+
+    $('preview').addEventListener('change', function (e) {
+      if (!e.target.checked) $('raw').textContent = currentSource();
+      body.classList.toggle('raw', !e.target.checked);
+      scrollTo(0, 0);
+    });
+  })();
+</script>
+</body>
+</html>
