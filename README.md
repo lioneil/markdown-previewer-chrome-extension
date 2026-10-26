@@ -1,134 +1,95 @@
 # Markdown Previewer
 
-![Markdown Previewer Screenshot](docs/screenshot-1.png)
+A Chrome extension that renders local Markdown files. Open a `.md` file from your disk and you get GitHub-style formatting, an outline sidebar, Mermaid diagrams, math, and a dark mode, in place of the plain text Chrome shows by default.
 
-A Chrome (and Chromium derivatives) extension that renders local `.md` files beautifully — right in the browser.
+[**Install from the Chrome Web Store**](https://chromewebstore.google.com/detail/markdown-previewer/nccgimhmfbjfiakcapgeofcfbpkpganp)
 
-Open any markdown file via `file://` protocol and get GitHub-style rendering with a navigable outline, Mermaid diagrams, syntax highlighting, interactive checkboxes, and dark mode.
+![A Markdown file rendered by the extension, with the outline sidebar open](docs/screenshot-1.png)
+
+## Getting started
+
+1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/markdown-previewer/nccgimhmfbjfiakcapgeofcfbpkpganp). It works in Chrome and Brave.
+2. Open `chrome://extensions`, click **Details** under Markdown Previewer, and turn on **Allow access to file URLs**. Chrome blocks extensions from local files until you do, and the extension cannot ask for this itself.
+3. Drag a `.md` or `.markdown` file into the browser, or open it with a `file://` address.
+
+To see every feature at once, open [`showcase.md`](showcase.md) from this repository.
 
 ## Features
 
-### Markdown Rendering
+### Rendering
 
-Full **GitHub Flavored Markdown** support powered by markdown-it, plus:
+The parser is [markdown-it](https://github.com/markdown-it/markdown-it) with GitHub Flavored Markdown, plus these additions:
 
-- **Syntax-highlighted code blocks** — 20+ languages with automatic detection, language labels, and one-click copy
-- **Mermaid diagrams** — flowcharts, sequence diagrams, Gantt charts, and more rendered inline as SVG
-- **Math / LaTeX** — KaTeX rendering for inline and block equations
-- **Task lists** — interactive checkboxes you can toggle and save (see below)
-- **Tables** — full GFM tables with colspan, rowspan, and multi-line cell support
-- **Footnotes** — numbered references with back-links
-- **GitHub-style alerts** — `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`
-- **Emoji shortcodes** — `:rocket:` becomes :rocket:
-- **Subscript / Superscript** — `H~2~O` and `x^2^`
-- **Highlighted text** — `==marked==`
-- **Definition lists** — term/definition pairs
+- Code blocks are highlighted with highlight.js when the fence names a language (` ```js `, ` ```python `, and about 190 others). Each block has a copy button, and highlighted blocks show their language.
+- Fences tagged `mermaid` become diagrams: flowcharts, sequence diagrams, Gantt charts, pie charts and the rest of what Mermaid 11 draws. They redraw when you switch themes.
+- Math is typeset with KaTeX, inline with `$...$` and as blocks with `$$...$$`.
+- Tables support colspan, rowspan and multi-line cells, and wide tables scroll sideways.
+- GitHub alerts (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`), footnotes, definition lists, emoji shortcodes like `:rocket:`, `H~2~O` subscript, `x^2^` superscript, and `==highlighted==` text.
 
-### Interactive Checkboxes
+A single line break in the source becomes a line break on the page, as in GitHub comments. Raw HTML is allowed, and bare URLs become links.
 
-Click a checkbox in the rendered preview to toggle it. A floating save bar appears so you can download the updated file with your changes preserved. No editor needed.
+### Checkboxes
 
-### Sidebar Outline
+Task list items (`- [ ]`) are clickable. Once you change one, a bar appears with a **Save a Copy** button that downloads the updated Markdown through the usual Save As dialog. The original file is not modified, since Chrome extensions cannot write to disk. Unsaved changes are lost on reload.
 
-A collapsible sidebar shows the full heading hierarchy of the document:
+### Outline sidebar
 
-- **Hierarchical tree** with collapsible sections
-- **Fuzzy search** to filter headings instantly
-- **Scroll spy** highlights the current section as you read
-- **Keyboard navigation** through search results
+The sidebar lists the document's headings as a collapsible tree and highlights the section you are reading. Its search box filters headings with fuzzy matching: arrow keys move through the results, Enter jumps to one, and Escape closes the search. Clicking a heading in the document puts its anchor in the address bar, so you can link to a section.
 
-### Theming
+### Reading controls
 
-- **Auto / Light / Dark** modes
-- Detects system preference automatically
-- Smooth transitions between themes
-- Theme persists across sessions
+The sidebar toolbar switches between auto, light and dark themes (auto follows your system setting), widens the text column past its default 800px, changes the font size in five steps from 14px to 20px, and switches between sans-serif and serif text. A back-to-top button appears once you scroll down. These preferences are saved, and synced to your other devices when Chrome sync is on.
 
-### UI Controls
-
-The sidebar toolbar provides quick access to:
-
-- **Theme toggle** — cycle through auto, light, and dark
-- **Wide mode** — expand content beyond the default 800px max-width
-- **Font size** — 5 preset sizes from 14px to 20px
-- **Back-to-top** button appears when scrolled down
-
-### Keyboard Shortcuts
+### Keyboard shortcuts
 
 | Shortcut | Action |
 |---|---|
-| `Alt+Shift+T` | Toggle theme (auto / light / dark) |
-| `Ctrl+Shift+K` | Toggle sidebar |
-| `Ctrl+Shift+F` | Search outline |
-| `Ctrl+Shift+W` | Toggle wide mode |
-| `Ctrl+Shift+=` | Increase font size |
-| `Ctrl+Shift+-` | Decrease font size |
+| `Alt+Shift+T` | Cycle the theme (auto, light, dark) |
+| `Ctrl+Shift+K` | Show or hide the sidebar |
+| `Ctrl+Shift+F` | Search the outline |
+| `Ctrl+Shift+W` | Toggle wide mode (macOS only: on Windows and Linux, Chrome uses this shortcut to close the window) |
+| `Ctrl+Shift+G` | Switch between sans-serif and serif |
+| `Ctrl+Shift+=` / `Ctrl+Shift+-` | Increase or decrease the font size |
 
-### Extension Popup
+The `Ctrl` shortcuts use the Control key on macOS too. You can change `Alt+Shift+T` at `chrome://extensions/shortcuts`.
 
-Click the toolbar icon to access settings:
+### Popup settings
 
-- Enable/disable the previewer
-- Toggle individual plugins on or off (Mermaid, KaTeX, emoji, footnotes, alerts, and more)
-- Toggle all plugins at once
-- Reset to defaults
+Click the toolbar icon to turn the previewer off (the page goes back to plain text straight away) or to switch off any of the optional syntaxes: Mermaid, KaTeX, emoji, footnotes, alerts, subscript, superscript, highlight, definition lists, advanced tables, and the typographer (smart quotes and dashes). **Reset to defaults** restores these and also resets the theme, font size, font, width and sidebar.
 
-## Installation
+## Privacy
 
-### From Source
+The extension makes no network requests of its own and never uploads your files. Its libraries and fonts are bundled, so it works offline. It stores only your preferences, in `chrome.storage.sync`. Images or HTML inside your Markdown that point to the web load the same way they would on any web page.
+
+It asks for two permissions: `storage` for the preferences and `downloads` for **Save a Copy**.
+
+## Development
+
+You need Node.js 22 or later and npm.
 
 ```bash
-# Clone the repository
 git clone https://github.com/lioneil/markdown-previewer-chrome-extension.git
 cd markdown-previewer-chrome-extension
-
-# Install dependencies
 npm install
 
-# Build for production
-npm run package
+npm run dev      # development build with hot reload
+npm run build    # production build in .output/chrome-mv3
+npm test         # unit tests (Vitest)
 ```
 
-Then load the extension:
+To load your build, open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and choose `.output/chrome-mv3`. Then turn on **Allow access to file URLs** for it.
 
-1. Open `chrome://extensions` in Chrome or Brave
-2. Enable **Developer mode**
-3. Click **Load unpacked** and select the `.output/chrome-mv3` directory
-4. Go to the extension's details and enable **Allow access to file URLs**
-5. Open any local `.md` file to see it rendered
+The extension is built with [WXT](https://wxt.dev/). The content script runs on `file://` pages ending in `.md` or `.markdown`, reads the text Chrome displays, renders it, and replaces the page.
 
-### Development
+### Releasing
 
 ```bash
-# Start dev server with hot reload
-npm run dev
-
-# Type check
-npm run lint
-
-# Build production zip
-npm run package
+npm version patch    # or minor, major: updates package.json, commits and tags
+git push --follow-tags
 ```
 
-## How It Works
-
-The extension injects a content script into `file://` URLs matching `.md` and `.markdown` extensions. It reads the raw text content, parses it through markdown-it with all configured plugins, and replaces the page with the rendered output — styled, themed, and ready to read.
-
-Settings and preferences are stored in `chrome.storage.sync`, so they follow you across devices where you're signed into Chrome.
-
-## Permissions
-
-- **Storage** — persist theme, plugin settings, and UI preferences
-- **Downloads** — save modified files when checkboxes are toggled
-
-## Built With
-
-- [WXT](https://wxt.dev/) — Vite-based browser extension framework
-- [markdown-it](https://github.com/markdown-it/markdown-it) — Markdown parser
-- [highlight.js](https://highlightjs.org/) — Syntax highlighting
-- [Mermaid](https://mermaid.js.org/) — Diagram rendering
-- [KaTeX](https://katex.org/) — Math typesetting
+Pushing the tag runs the Release workflow, which tests the code, builds the zip and attaches it to a new GitHub release. Upload that zip in the Chrome Web Store developer dashboard to publish it.
 
 ## License
 
-MIT
+[MIT](LICENSE)
