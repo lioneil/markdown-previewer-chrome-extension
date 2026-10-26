@@ -1,18 +1,12 @@
 name: Release
 
+# Runs when a version tag is pushed. To release:
+#   npm version patch        (or minor / major: bumps package.json, commits and tags)
+#   git push --follow-tags
+
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        description: Version bump
-        type: choice
-        options: [patch, minor, major]
-        default: patch
-        required: true
-      dry_run:
-        description: Check store credentials without uploading, and leave the repo untouched
-        type: boolean
-        default: false
+  push:
+    tags: ['v*']
 
 permissions:
   contents: write
@@ -23,63 +17,47 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Check out the branch itself, not a detached HEAD, so the bump can be pushed.
-          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
+      # `npm version` writes both, so a mismatch means the tag was made by hand.
+      - name: Check the tag matches package.json
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json ($version)"
+            exit 1
+          fi
+
       - run: npm ci
 
       - name: Test
         run: npm test
 
-      # Attribute the release commit to whoever ran the workflow.
-      - name: Configure git
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-      # Bumps package.json, commits and tags locally. Nothing is pushed until the
-      # store upload has succeeded, so a failed upload leaves the repo untouched.
-      - name: Bump version
-        id: bump
-        run: |
-          npm version "${{ inputs.bump }}" -m "chore: release v%s"
-          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
-
-      # Reads the version from package.json, so this must run after the bump.
       - name: Build and zip
         id: zip
         run: |
           npx wxt zip
           echo "path=$(ls .output/*-chrome.zip)" >> "$GITHUB_OUTPUT"
 
-      - name: Upload to the Chrome Web Store
-        env:
-          DRY_RUN: ${{ inputs.dry_run && '--dry-run' || '' }}
+      # Uploads the zip and submits it for review. The store publishes it once the review passes.
+      - name: Publish to the Chrome Web Store
         run: |
           npx wxt submit \
             --chrome-zip "${{ steps.zip.outputs.path }}" \
             --chrome-extension-id "${{ secrets.CHROME_EXTENSION_ID }}" \
             --chrome-client-id "${{ secrets.CHROME_CLIENT_ID }}" \
             --chrome-client-secret "${{ secrets.CHROME_CLIENT_SECRET }}" \
-            --chrome-refresh-token "${{ secrets.CHROME_REFRESH_TOKEN }}" \
-            --chrome-skip-submit-review $DRY_RUN
-
-      - name: Push the bump and tag
-        if: ${{ !inputs.dry_run }}
-        run: git push --follow-tags
+            --chrome-refresh-token "${{ secrets.CHROME_REFRESH_TOKEN }}"
 
       - name: Create the GitHub release
-        if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "v${{ steps.bump.outputs.version }}" \
-            --title "v${{ steps.bump.outputs.version }}" \
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
             --generate-notes \
             "${{ steps.zip.outputs.path }}"
