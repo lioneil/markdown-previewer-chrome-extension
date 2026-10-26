@@ -43,16 +43,7 @@ jobs:
           npx wxt zip
           echo "path=$(ls .output/*-chrome.zip)" >> "$GITHUB_OUTPUT"
 
-      # Uploads the zip and submits it for review. The store publishes it once the review passes.
-      - name: Publish to the Chrome Web Store
-        run: |
-          npx wxt submit \
-            --chrome-zip "${{ steps.zip.outputs.path }}" \
-            --chrome-extension-id "${{ secrets.CHROME_EXTENSION_ID }}" \
-            --chrome-client-id "${{ secrets.CHROME_CLIENT_ID }}" \
-            --chrome-client-secret "${{ secrets.CHROME_CLIENT_SECRET }}" \
-            --chrome-refresh-token "${{ secrets.CHROME_REFRESH_TOKEN }}"
-
+      # The zip attached here is the one to upload to the Chrome Web Store dashboard.
       - name: Create the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
