@@ -3,6 +3,7 @@ import { initTheme, resolveTheme, getThemePreference, type ThemePreference } fro
 import { buildSidebar, initScrollSpy } from '@/lib/sidebar';
 import { renderMermaidDiagrams, rerenderMermaidDiagrams } from '@/lib/mermaid';
 import { initCheckboxes } from '@/lib/checkbox';
+import { enhanceCodeBlocks } from '@/lib/code-blocks';
 import { getSettings, type Settings } from '@/lib/settings';
 import 'highlight.js/styles/github.css';
 import 'katex/dist/katex.min.css';
@@ -10,41 +11,6 @@ import '@mdit/plugin-alert/style';
 import '@/assets/content.css';
 
 const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62"><path fill-rule="evenodd" fill="#000" d="m31 62c-17.14 0-31-13.86-31-31 0-17.14 13.86-31 31-31 17.14 0 31 13.86 31 31 0 17.14-13.86 31-31 31z"/><path fill-rule="evenodd" fill="#000" d="m31 31v31h-31v-31z"/><path fill-rule="evenodd" fill="#fff" d="m52 19.21v26.58h-42v-26.58z"/><path fill-rule="evenodd" fill="#000" d="m53.5 17.08v27.34c0 5.01-4.07 9.08-9.08 9.08h-36.42v-36.42c0-5.01 4.07-9.08 9.08-9.08h27.34c5.01 0 9.08 4.07 9.08 9.08zm-41.94 22.41h5.14v-10.03l5.14 6.43 5.14-6.43v10.03h5.15v-17.48h-5.15l-5.14 6.43-5.14-6.43h-5.14zm32.14 0l7.71-8.49h-5.14v-8.99h-5.14v8.99h-5.15z"/></svg>`;
-
-const iconCopy = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
-const iconCheck = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-
-function addCodeBlockEnhancements() {
-  document.querySelectorAll('.md-body pre.hljs').forEach((pre) => {
-    pre.classList.add('code-block');
-
-    const code = pre.querySelector('code');
-    const langClass = code?.className.match(/language-(\S+)/);
-    if (langClass) {
-      const label = document.createElement('span');
-      label.className = 'code-lang';
-      label.textContent = langClass[1];
-      pre.appendChild(label);
-    }
-
-    const btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.title = 'Copy code';
-    btn.innerHTML = iconCopy;
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(code?.textContent ?? '');
-      btn.innerHTML = iconCheck;
-      btn.title = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.innerHTML = iconCopy;
-        btn.title = 'Copy code';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
-    pre.appendChild(btn);
-  });
-}
 
 function wrapTables() {
   document.querySelectorAll('.md-body table').forEach((table) => {
@@ -68,7 +34,7 @@ function renderPage(rawMarkdown: string, settings: Settings) {
     </main>
   `;
 
-  addCodeBlockEnhancements();
+  enhanceCodeBlocks();
   wrapTables();
 
   // Make headings clickable — updates URL hash and scrolls

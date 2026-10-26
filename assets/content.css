@@ -655,8 +655,15 @@ body.md-preview.font-serif .md-sidebar {
   margin: 0 0 20px;
 }
 
-.md-body pre.code-block {
+/* The well is the positioning box. The pre inside it is the only scroller,
+   so the label and copy button stay in the visible corner. */
+.md-body .code-block {
   position: relative;
+  margin: 0 0 20px;
+}
+
+.md-body .code-block > pre.hljs {
+  margin: 0;
   padding-top: 36px;
 }
 
@@ -671,6 +678,7 @@ body.md-preview.font-serif .md-sidebar {
 /* Language label */
 .md-body .code-lang {
   position: absolute;
+  z-index: 1;
   top: 8px;
   left: 16px;
   font-size: 0.75em;
@@ -684,11 +692,11 @@ body.md-preview.font-serif .md-sidebar {
 /* Copy button */
 .md-body .copy-btn {
   position: absolute;
+  z-index: 1;
   top: 8px;
   right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 32px;
   height: 32px;
   padding: 0;
@@ -698,10 +706,59 @@ body.md-preview.font-serif .md-sidebar {
   border-radius: 6px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+  transition: opacity 0.15s, color 0.2s, border-color 0.2s;
 }
 
-.md-body pre.code-block:hover .copy-btn {
+.md-body .copy-btn .copy-icon {
+  grid-area: 1 / 1;
+  display: flex;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.md-body .copy-btn .copy-icon-check {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.md-body .copy-btn .copy-icon-check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.md-body .copy-btn.copied .copy-icon-copy {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.md-body .copy-btn.copied .copy-icon-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.md-body .copy-btn.copied .copy-icon-check path {
+  animation: copy-check-draw 0.32s ease forwards;
+}
+
+@keyframes copy-check-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-body .copy-btn .copy-icon,
+  .md-body .copy-btn .copy-icon-check path {
+    transition: none;
+    animation: none;
+  }
+
+  .md-body .copy-btn.copied .copy-icon-check path {
+    stroke-dashoffset: 0;
+  }
+}
+
+.md-body .code-block:hover .copy-btn,
+.md-body .code-block:focus-within .copy-btn {
   opacity: 1;
 }
 
