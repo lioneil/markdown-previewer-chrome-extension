@@ -1,5 +1,4 @@
-import MarkdownIt from 'markdown-it';
-import type StateCore from 'markdown-it/lib/rules_core/state_core.mjs';
+import markdownit, { type MarkdownIt, type StateCore } from 'markdown-it';
 import hljs from 'highlight.js';
 import taskLists from 'markdown-it-task-lists';
 import footnote from 'markdown-it-footnote';
@@ -31,7 +30,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
     ...plugins,
   };
 
-  const md: MarkdownIt = new MarkdownIt({
+  const md: MarkdownIt = markdownit({
     html: true,
     linkify: true,
     typographer: p.typographer,
@@ -62,7 +61,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
       if (
         token.type === 'list_item_open' &&
         token.map &&
-        token.attrGet('class')?.includes('task-list-item')
+        token.attrGet('class')?.toString().includes('task-list-item')
       ) {
         token.attrSet('data-source-line', String(token.map[0]));
       }
@@ -70,7 +69,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
     return true;
   });
 
-  md.use(anchor, { permalink: false });
+  md.use(anchor);
 
   if (p.footnote) md.use(footnote);
   if (p.emoji) md.use(emoji);
@@ -78,12 +77,23 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
   if (p.sup) md.use(sup);
   if (p.mark) md.use(mark);
   if (p.deflist) md.use(deflist);
-  if (p.multimdTable) md.use(multimdTable, {
-    multiline: true,
-    rowspan: true,
-    headerless: true,
+  if (p.multimdTable) {
+    // markdown-it 15 dropped utils.assign, which markdown-it-multimd-table 4.2.3
+    // still calls while it sets up.
+    md.utils = Object.assign({}, md.utils, { assign: Object.assign });
+    md.use(multimdTable, {
+      multiline: true,
+      rowspan: true,
+      headerless: true,
+    });
+  }
+  if (p.alerts) md.use(alert, {
+    // Title the alert the way GitHub does ("Note"), whatever case the source uses.
+    titleRenderer: (tokens, idx) => {
+      const name = tokens[idx].markup;
+      return `<p class="markdown-alert-title">${name[0].toUpperCase()}${name.slice(1)}</p>\n`;
+    },
   });
-  if (p.alerts) md.use(alert);
   if (p.katex) md.use(katex, { throwOnError: false });
 
   // Override fence renderer for mermaid blocks
