@@ -1,0 +1,633 @@
+<h1 id="markdown-previewer-%E2%80%94-feature-showcase" tabindex="-1">Markdown Previewer — Feature Showcase</h1>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>This is a <strong>tip</strong> alert. Use it for helpful advice that makes things easier or more efficient.</p>
+</div>
+<h2 id="overview" tabindex="-1">Overview</h2>
+<p>This document demonstrates every rendering feature supported by the Markdown Previewer Chrome extension. It doubles as a manual QA checklist — open this file via <code>file://</code> and verify each section renders correctly.</p>
+<ol>
+<li><strong>Core GFM</strong> — Headings, paragraphs, bold, italic, strikethrough, links, images, blockquotes, lists, tables, horizontal rules, and fenced code blocks with syntax highlighting.</li>
+<li><strong>Extended syntax</strong> — Footnotes, definition lists, subscript, superscript, mark/highlight, emoji shortcodes, and GitHub-style alerts.</li>
+<li><strong>Plugins</strong> — KaTeX math rendering, Mermaid diagrams, and interactive task list checkboxes.</li>
+</ol>
+<hr>
+<h2 id="text-formatting" tabindex="-1">Text Formatting</h2>
+<p>Regular paragraph text with a comfortable line-height and max-width constraint. Long paragraphs should wrap naturally without horizontal overflow, even when they contain long inline code spans like <code>resources/vue/modules/admin/modules/hiring/details/partials/Attachments.vue</code> which should break across lines.</p>
+<p>This line has a single newline before it — with <code>breaks: true</code>, it renders as a <code>&lt;br&gt;</code>.</p>
+<p><strong>Bold text</strong> for emphasis.<br>
+<em>Italic text</em> for secondary emphasis.<br>
+<em><strong>Bold italic</strong></em> for strong emphasis.<br>
+<s>Strikethrough</s> for deleted content.<br>
+<mark>Highlighted text</mark> using the mark plugin.<br>
+Text with <sub>subscript</sub> (H<sub>2</sub>O) and <sup>superscript</sup> (x<sup>2</sup> + y<sup>2</sup> = r<sup>2</sup>).</p>
+<hr>
+<h2 id="links-%26-images" tabindex="-1">Links &amp; Images</h2>
+<ul>
+<li>Inline link: <a href="https://github.com">GitHub</a></li>
+<li>Auto-linked URL: <a href="https://example.com">https://example.com</a></li>
+<li>Reference-style link: <a href="https://www.markdownguide.org" title="Markdown Guide">Markdown Guide</a></li>
+</ul>
+<p>Image with alt text (if the file exists):</p>
+<p><img src="https://placehold.co/600x400" alt="Placeholder — extension icon"></p>
+<hr>
+<h2 id="video-%26-media" tabindex="-1">Video &amp; Media</h2>
+<h3 id="local-video" tabindex="-1">Local Video</h3>
+<video src="../sample.mov" controls width="100%">
+  Your browser does not support the video tag.
+</video>
+<hr>
+<h2 id="blockquotes" tabindex="-1">Blockquotes</h2>
+<blockquote>
+<p>This is a simple blockquote. It should have a left border and muted text color.</p>
+</blockquote>
+<blockquote>
+<p><strong>Nested blockquote with formatting:</strong></p>
+<blockquote>
+<p>Inner blockquote with <code>inline code</code> and a <a href="https://example.com">link</a>.</p>
+<p>Multiple paragraphs inside the nested blockquote.</p>
+</blockquote>
+<p>Back to the outer level.</p>
+</blockquote>
+<hr>
+<h2 id="lists" tabindex="-1">Lists</h2>
+<h3 id="unordered-list" tabindex="-1">Unordered List</h3>
+<ul>
+<li>First item</li>
+<li>Second item with <strong>bold</strong> and <code>code</code>
+<ul>
+<li>Nested item A</li>
+<li>Nested item B
+<ul>
+<li>Deeply nested item</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Third item</li>
+</ul>
+<h3 id="ordered-list" tabindex="-1">Ordered List</h3>
+<ol>
+<li>Clone the repository</li>
+<li>Install dependencies: <code>npm install</code></li>
+<li>Start the dev server: <code>npm run dev</code></li>
+<li>Load the extension in Chrome:
+<ol>
+<li>Open <code>chrome://extensions</code></li>
+<li>Enable “Developer mode”</li>
+<li>Click “Load unpacked”</li>
+<li>Select <code>.output/chrome-mv3</code></li>
+</ol>
+</li>
+<li>Enable “Allow access to file URLs”</li>
+</ol>
+<h3 id="task-list-(interactive-checkboxes)" tabindex="-1">Task List (Interactive Checkboxes)</h3>
+<ul class="contains-task-list">
+<li class="task-list-item enabled" data-source-line="93"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Project setup with WXT framework</label></li>
+<li class="task-list-item enabled" data-source-line="94"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Markdown-it with all plugins configured</label></li>
+<li class="task-list-item enabled" data-source-line="95"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Syntax highlighting via highlight.js</label></li>
+<li class="task-list-item enabled" data-source-line="96"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Base stylesheet per Styleguide</label></li>
+<li class="task-list-item enabled" data-source-line="97"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Light/dark theme with auto-detection</label></li>
+<li class="task-list-item enabled" data-source-line="98"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> TOC sidebar with scroll spy</label></li>
+<li class="task-list-item enabled" data-source-line="99"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> Mermaid diagram rendering</label></li>
+<li class="task-list-item enabled" data-source-line="100"><label><input class="task-list-item-checkbox"type="checkbox"> Interactive checkboxes that save to file</label></li>
+<li class="task-list-item enabled" data-source-line="101"><label><input class="task-list-item-checkbox"type="checkbox"> Extension popup &amp; settings</label></li>
+<li class="task-list-item enabled" data-source-line="102"><label><input class="task-list-item-checkbox"type="checkbox"> Polish, edge cases &amp; packaging</label></li>
+</ul>
+<hr>
+<h2 id="code-blocks" tabindex="-1">Code Blocks</h2>
+<h3 id="javascript" tabindex="-1">JavaScript</h3>
+<pre class="hljs"><code class="language-javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">fetchMarkdown</span>(<span class="hljs-params">url</span>) {
+  <span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> <span class="hljs-title function_">fetch</span>(url);
+  <span class="hljs-keyword">if</span> (!response.<span class="hljs-property">ok</span>) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">`Failed to fetch: <span class="hljs-subst">${response.status}</span>`</span>);
+  }
+  <span class="hljs-keyword">return</span> response.<span class="hljs-title function_">text</span>();
+}
+
+<span class="hljs-comment">// Render markdown to HTML</span>
+<span class="hljs-keyword">const</span> md = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MarkdownIt</span>({ <span class="hljs-attr">breaks</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">linkify</span>: <span class="hljs-literal">true</span> });
+<span class="hljs-keyword">const</span> html = md.<span class="hljs-title function_">render</span>(<span class="hljs-keyword">await</span> <span class="hljs-title function_">fetchMarkdown</span>(<span class="hljs-string">&#x27;README.md&#x27;</span>));
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">innerHTML</span> = html;
+</code></pre>
+<h3 id="typescript" tabindex="-1">TypeScript</h3>
+<pre class="hljs"><code class="language-typescript"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">ThemeConfig</span> {
+  <span class="hljs-attr">preference</span>: <span class="hljs-string">&#x27;auto&#x27;</span> | <span class="hljs-string">&#x27;light&#x27;</span> | <span class="hljs-string">&#x27;dark&#x27;</span>;
+  <span class="hljs-attr">resolved</span>: <span class="hljs-string">&#x27;light&#x27;</span> | <span class="hljs-string">&#x27;dark&#x27;</span>;
+}
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">resolveTheme</span>(<span class="hljs-params"><span class="hljs-attr">pref</span>: <span class="hljs-title class_">ThemeConfig</span>[<span class="hljs-string">&#x27;preference&#x27;</span>]</span>): <span class="hljs-title class_">ThemeConfig</span>[<span class="hljs-string">&#x27;resolved&#x27;</span>] {
+  <span class="hljs-keyword">if</span> (pref === <span class="hljs-string">&#x27;auto&#x27;</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">matchMedia</span>(<span class="hljs-string">&#x27;(prefers-color-scheme: dark)&#x27;</span>).<span class="hljs-property">matches</span> ? <span class="hljs-string">&#x27;dark&#x27;</span> : <span class="hljs-string">&#x27;light&#x27;</span>;
+  }
+  <span class="hljs-keyword">return</span> pref;
+}
+</code></pre>
+<h3 id="python" tabindex="-1">Python</h3>
+<pre class="hljs"><code class="language-python"><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path
+<span class="hljs-keyword">import</span> re
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">count_checkboxes</span>(<span class="hljs-params">markdown: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>]:
+    <span class="hljs-string">&quot;&quot;&quot;Count checked and unchecked checkboxes in markdown text.&quot;&quot;&quot;</span>
+    lines = markdown.splitlines()
+    checked = <span class="hljs-built_in">sum</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> l <span class="hljs-keyword">in</span> lines <span class="hljs-keyword">if</span> re.<span class="hljs-keyword">match</span>(<span class="hljs-string">r&#x27;\s*-\s*\[x\]&#x27;</span>, l, re.I))
+    unchecked = <span class="hljs-built_in">sum</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> l <span class="hljs-keyword">in</span> lines <span class="hljs-keyword">if</span> re.<span class="hljs-keyword">match</span>(<span class="hljs-string">r&#x27;\s*-\s*\[ \]&#x27;</span>, l))
+    <span class="hljs-keyword">return</span> {<span class="hljs-string">&quot;checked&quot;</span>: checked, <span class="hljs-string">&quot;unchecked&quot;</span>: unchecked, <span class="hljs-string">&quot;total&quot;</span>: checked + unchecked}
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:
+    content = Path(<span class="hljs-string">&quot;README.md&quot;</span>).read_text()
+    stats = count_checkboxes(content)
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Progress: <span class="hljs-subst">{stats[<span class="hljs-string">&#x27;checked&#x27;</span>]}</span>/<span class="hljs-subst">{stats[<span class="hljs-string">&#x27;total&#x27;</span>]}</span> tasks complete&quot;</span>)
+</code></pre>
+<h3 id="bash" tabindex="-1">Bash</h3>
+<pre class="hljs"><code class="language-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+<span class="hljs-comment"># Build and package the extension</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Building extension...&quot;</span>
+npx wxt build
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Packaging...&quot;</span>
+<span class="hljs-built_in">cd</span> .output/chrome-mv3
+zip -r ../../markdown-previewer.zip .
+<span class="hljs-built_in">cd</span> ../..
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Done: markdown-previewer.zip (<span class="hljs-subst">$(du -h markdown-previewer.zip | cut -f1)</span>)&quot;</span>
+</code></pre>
+<h3 id="go" tabindex="-1">Go</h3>
+<pre class="hljs"><code class="language-go"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> (
+    <span class="hljs-string">&quot;fmt&quot;</span>
+    <span class="hljs-string">&quot;os&quot;</span>
+    <span class="hljs-string">&quot;path/filepath&quot;</span>
+    <span class="hljs-string">&quot;strings&quot;</span>
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">findMarkdownFiles</span><span class="hljs-params">(root <span class="hljs-type">string</span>)</span></span> ([]<span class="hljs-type">string</span>, <span class="hljs-type">error</span>) {
+    <span class="hljs-keyword">var</span> files []<span class="hljs-type">string</span>
+    err := filepath.Walk(root, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(path <span class="hljs-type">string</span>, info os.FileInfo, err <span class="hljs-type">error</span>)</span></span> <span class="hljs-type">error</span> {
+        <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+            <span class="hljs-keyword">return</span> err
+        }
+        ext := strings.ToLower(filepath.Ext(path))
+        <span class="hljs-keyword">if</span> ext == <span class="hljs-string">&quot;.md&quot;</span> || ext == <span class="hljs-string">&quot;.markdown&quot;</span> {
+            files = <span class="hljs-built_in">append</span>(files, path)
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+    })
+    <span class="hljs-keyword">return</span> files, err
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    files, err := findMarkdownFiles(<span class="hljs-string">&quot;.&quot;</span>)
+    <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        fmt.Fprintf(os.Stderr, <span class="hljs-string">&quot;Error: %v\n&quot;</span>, err)
+        os.Exit(<span class="hljs-number">1</span>)
+    }
+    <span class="hljs-keyword">for</span> _, f := <span class="hljs-keyword">range</span> files {
+        fmt.Println(f)
+    }
+}
+</code></pre>
+<h3 id="css" tabindex="-1">CSS</h3>
+<pre class="hljs"><code class="language-css"><span class="hljs-selector-attr">[data-theme=<span class="hljs-string">&quot;dark&quot;</span>]</span> {
+  <span class="hljs-attr">--color-bg</span>: <span class="hljs-number">#1E1E1E</span>;
+  <span class="hljs-attr">--color-text</span>: <span class="hljs-number">#D4D4D4</span>;
+  <span class="hljs-attr">--color-link</span>: <span class="hljs-number">#6CA4E0</span>;
+  <span class="hljs-attr">--color-code-bg</span>: <span class="hljs-number">#2D2D2D</span>;
+  <span class="hljs-attr">--color-divider</span>: <span class="hljs-number">#3E3E3E</span>;
+}
+
+<span class="hljs-selector-class">.md-body</span> pre<span class="hljs-selector-class">.code-block</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">padding-top</span>: <span class="hljs-number">36px</span>;
+}
+</code></pre>
+<h3 id="json" tabindex="-1">JSON</h3>
+<pre class="hljs"><code class="language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;manifest_version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Markdown Previewer&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0.0&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;permissions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;storage&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;content_scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;matches&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;file:///*/*.md&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;js&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;content-scripts/content.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;css&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;content-scripts/content.css&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;run_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;document_idle&quot;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="sql" tabindex="-1">SQL</h3>
+<pre class="hljs"><code class="language-sql"><span class="hljs-keyword">SELECT</span>
+    h.id <span class="hljs-keyword">AS</span> hiring_id,
+    u.email <span class="hljs-keyword">AS</span> professional_email,
+    h.status,
+    <span class="hljs-built_in">COUNT</span>(ra.media_id) <span class="hljs-keyword">AS</span> attachments_with_media
+<span class="hljs-keyword">FROM</span> hirings h
+<span class="hljs-keyword">JOIN</span> users u <span class="hljs-keyword">ON</span> u.id <span class="hljs-operator">=</span> h.professional_user_id
+<span class="hljs-keyword">CROSS</span> <span class="hljs-keyword">JOIN</span> <span class="hljs-keyword">LATERAL</span> jsonb_array_elements(h.requested_attachments) <span class="hljs-keyword">AS</span> ra
+<span class="hljs-keyword">WHERE</span> h.deleted_at <span class="hljs-keyword">IS</span> <span class="hljs-keyword">NULL</span>
+<span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> h.id, u.email, h.status
+<span class="hljs-keyword">HAVING</span> <span class="hljs-built_in">COUNT</span>(ra.media_id) <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span>
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> h.created_at <span class="hljs-keyword">DESC</span>
+LIMIT <span class="hljs-number">20</span>;
+</code></pre>
+<h3 id="php" tabindex="-1">PHP</h3>
+<pre class="hljs"><code class="language-php"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CleanupHiringDocumentsJob</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ShouldQueue</span>
+</span>{
+    <span class="hljs-keyword">use</span> <span class="hljs-title">Dispatchable</span>, <span class="hljs-title">InteractsWithQueue</span>, <span class="hljs-title">Queueable</span>, <span class="hljs-title">SerializesModels</span>;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params">
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> Hiring <span class="hljs-variable">$hiring</span>,
+    </span>) </span>{}
+
+    <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handle</span>(<span class="hljs-params"></span>): <span class="hljs-title">void</span>
+    </span>{
+        <span class="hljs-variable language_">$this</span>-&gt;hiring-&gt;<span class="hljs-title function_ invoke__">deleteHiringDocumentsFromStorage</span>();
+
+        <span class="hljs-title class_">Log</span>::<span class="hljs-title function_ invoke__">info</span>(<span class="hljs-string">&#x27;Hiring documents cleaned up&#x27;</span>, [
+            <span class="hljs-string">&#x27;hiring_id&#x27;</span> =&gt; <span class="hljs-variable">$this</span>-&gt;hiring-&gt;id,
+            <span class="hljs-string">&#x27;attachments&#x27;</span> =&gt; <span class="hljs-title function_ invoke__">count</span>(<span class="hljs-variable">$this</span>-&gt;hiring-&gt;requested_attachments ?? []),
+        ]);
+    }
+}
+</code></pre>
+<h3 id="plain-(no-language)" tabindex="-1">Plain (no language)</h3>
+<pre class="hljs"><code>This is a plain code block with no language annotation.
+It should render as monospace text without syntax highlighting.
+The background should still be the code-block color.
+</code></pre>
+<hr>
+<h2 id="tables" tabindex="-1">Tables</h2>
+<h3 id="simple-table" tabindex="-1">Simple Table</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+<th>Ticket</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GFM Rendering</td>
+<td>Done</td>
+<td>DEV-001</td>
+</tr>
+<tr>
+<td>Syntax Highlighting</td>
+<td>Done</td>
+<td>DEV-002</td>
+</tr>
+<tr>
+<td>Light/Dark Theme</td>
+<td>Done</td>
+<td>DEV-003</td>
+</tr>
+<tr>
+<td>TOC Sidebar</td>
+<td>Pending</td>
+<td>DEV-004</td>
+</tr>
+<tr>
+<td>Mermaid Diagrams</td>
+<td>Pending</td>
+<td>DEV-005</td>
+</tr>
+<tr>
+<td>Interactive Checkboxes</td>
+<td>Pending</td>
+<td>DEV-006</td>
+</tr>
+</tbody>
+</table>
+<h3 id="wide-table-(tests-horizontal-scroll)" tabindex="-1">Wide Table (tests horizontal scroll)</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>File Path</th>
+<th>Purpose</th>
+<th>Layer</th>
+<th>Status</th>
+<th>Priority</th>
+<th>Assignee</th>
+<th>Sprint</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content Script</td>
+<td><code>entrypoints/content.ts</code></td>
+<td>Main entry, reads raw text, renders markdown</td>
+<td>Extension</td>
+<td>Done</td>
+<td>Critical</td>
+<td>—</td>
+<td>1</td>
+<td>Runs at document_idle</td>
+</tr>
+<tr>
+<td>Markdown Renderer</td>
+<td><code>lib/markdown.ts</code></td>
+<td>Configures markdown-it with all plugins</td>
+<td>Library</td>
+<td>Done</td>
+<td>Critical</td>
+<td>—</td>
+<td>1</td>
+<td>13 plugins registered</td>
+</tr>
+<tr>
+<td>Theme Manager</td>
+<td><code>lib/theme.ts</code></td>
+<td>Theme detection, toggling, persistence</td>
+<td>Library</td>
+<td>Done</td>
+<td>High</td>
+<td>—</td>
+<td>1</td>
+<td>Auto/light/dark cycle</td>
+</tr>
+<tr>
+<td>Sidebar Builder</td>
+<td><code>lib/sidebar.ts</code></td>
+<td>TOC extraction, scroll spy, collapse</td>
+<td>Library</td>
+<td>Pending</td>
+<td>High</td>
+<td>—</td>
+<td>2</td>
+<td>IntersectionObserver</td>
+</tr>
+<tr>
+<td>Checkbox Persistence</td>
+<td><code>lib/checkbox.ts</code></td>
+<td>Maps checkboxes to source lines, writes back</td>
+<td>Library</td>
+<td>Pending</td>
+<td>Critical</td>
+<td>—</td>
+<td>3</td>
+<td>Needs Native Messaging</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="github-style-alerts" tabindex="-1">GitHub-style Alerts</h2>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>This is a <strong>note</strong> alert. Use it to highlight information that users should take into account, even when skimming. Supports <code>inline code</code> and <a href="https://example.com">links</a>.</p>
+</div>
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>This is a <strong>tip</strong> alert. Use it for helpful advice that makes things easier or more efficient.</p>
+</div>
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>This is an <strong>important</strong> alert. Use it for crucial information necessary for users to succeed.</p>
+</div>
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>This is a <strong>warning</strong> alert. Use it for urgent information that needs immediate user attention to avoid problems.</p>
+</div>
+<div class="markdown-alert markdown-alert-caution">
+<p class="markdown-alert-title">Caution</p>
+<p>This is a <strong>caution</strong> alert. Use it to advise about risks or negative outcomes of certain actions.</p>
+</div>
+<hr>
+<h2 id="footnotes" tabindex="-1">Footnotes</h2>
+<p>The Markdown Previewer extension uses markdown-it<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup> as its core parser, with highlight.js<sup class="footnote-ref"><a href="#fn2" id="fnref2">[2]</a></sup> for syntax highlighting. The extension architecture follows Chrome’s Manifest V3<sup class="footnote-ref"><a href="#fn3" id="fnref3">[3]</a></sup> requirements.</p>
+<p>Interactive checkboxes that persist to the source file<sup class="footnote-ref"><a href="#fn4" id="fnref4">[4]</a></sup> are the primary motivation for this project.</p>
+<hr>
+<h2 id="definition-lists" tabindex="-1">Definition Lists</h2>
+<dl>
+<dt>Markdown-it</dt>
+<dd>A fast, pluggable markdown parser written in JavaScript. The core rendering engine used by this extension.</dd>
+<dt>WXT</dt>
+<dd>A next-generation framework for building web extensions with Vite. Provides file-based entrypoints, auto-imports, and cross-browser builds.</dd>
+<dt>Content Script</dt>
+<dd>A JavaScript file that runs in the context of a web page. In this extension, it reads raw <code>.md</code> text and replaces the DOM with rendered HTML.</dd>
+<dt>Service Worker</dt>
+<dd>The background script in Manifest V3 extensions. Event-driven and terminates when idle — state must be persisted via <code>chrome.storage</code>.</dd>
+<dt>Native Messaging</dt>
+<dd>A Chrome API that allows extensions to communicate with a companion native application installed on the user’s machine. Required for filesystem write access.</dd>
+</dl>
+<hr>
+<h2 id="emoji" tabindex="-1">Emoji</h2>
+<p>Commonly used in markdown documentation:</p>
+<p>🚀 Launch ready<br>
+✅ Tests passing<br>
+⚠️ Needs attention<br>
+🐛 Known issue<br>
+✨ New feature<br>
+🔧 Configuration<br>
+📝 Documentation<br>
+🔥 Breaking change<br>
+🎉 Release<br>
+🚧 Work in progress</p>
+<hr>
+<h2 id="typographer-(smart-quotes-%26-dashes)" tabindex="-1">Typographer (Smart Quotes &amp; Dashes)</h2>
+<p>The typographer plugin converts ASCII punctuation into typographically correct characters. It can be toggled on/off in the extension popup settings.</p>
+<h3 id="smart-quotes" tabindex="-1">Smart Quotes</h3>
+<ul>
+<li>“Double quotes” should become curly: “Double quotes”</li>
+<li>‘Single quotes’ should become curly: ‘Single quotes’</li>
+<li>“Nested ‘quotes’ inside” doubles work too.</li>
+</ul>
+<h3 id="dashes" tabindex="-1">Dashes</h3>
+<ul>
+<li>Double dash – becomes an en-dash (–)</li>
+<li>Triple dash — becomes an em-dash (—)</li>
+<li>She said – quite firmly — “No.”</li>
+</ul>
+<h3 id="ellipsis" tabindex="-1">Ellipsis</h3>
+<ul>
+<li>Three dots… become a proper ellipsis (…)</li>
+<li>Wait for it…</li>
+</ul>
+<h3 id="other-replacements" tabindex="-1">Other Replacements</h3>
+<ul>
+<li>© becomes the copyright symbol</li>
+<li>® becomes the registered trademark symbol</li>
+<li>™ becomes the trademark symbol</li>
+<li>(p) becomes the section symbol</li>
+<li>± becomes the plus-minus sign</li>
+</ul>
+<hr>
+<h2 id="math-(katex)" tabindex="-1">Math (KaTeX)</h2>
+<h3 id="inline-math" tabindex="-1">Inline Math</h3>
+<p>The quadratic formula is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.3845em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0395em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mathnormal mtight">a</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">b</span><span class="mbin mtight">±</span><span class="mord sqrt mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9221em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mtight" style="padding-left:0.833em;"><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight">4</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">c</span></span></span><span style="top:-2.8821em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail mtight" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1179em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo mathvariant="normal">≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">a \neq 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>.</p>
+<p>Einstein’s mass-energy equivalence: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">E = mc^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord mathnormal">m</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>.</p>
+<h3 id="block-math" tabindex="-1">Block Math</h3>
+<p>The probability density function of a normal distribution:</p>
+<p class="katex-block "><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mi>σ</mi><msqrt><mrow><mn>2</mn><mi>π</mi></mrow></msqrt></mrow></mfrac><mi>exp</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mo>−</mo><mfrac><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mi>μ</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><mrow><mn>2</mn><msup><mi>σ</mi><mn>2</mn></msup></mrow></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4411em;vertical-align:-0.95em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.2028em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9072em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span></span></span><span style="top:-2.8672em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1328em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">exp</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">μ</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span></p>
+<p>Matrix multiplication:</p>
+<p class="katex-block "><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>11</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>12</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>21</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>a</mi><mn>22</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>b</mi><mn>11</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>b</mi><mn>12</mn></msub></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>b</mi><mn>21</mn></msub></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><msub><mi>b</mi><mn>22</mn></msub></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>=</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><msub><mi>a</mi><mn>11</mn></msub><msub><mi>b</mi><mn>11</mn></msub><mo>+</mo><msub><mi>a</mi><mn>12</mn></msub><msub><mi>b</mi><mn>21</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><msub><mi>a</mi><mn>11</mn></msub><msub><mi>b</mi><mn>12</mn></msub><mo>+</mo><msub><mi>a</mi><mn>12</mn></msub><msub><mi>b</mi><mn>22</mn></msub></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><msub><mi>a</mi><mn>21</mn></msub><msub><mi>b</mi><mn>11</mn></msub><mo>+</mo><msub><mi>a</mi><mn>22</mn></msub><msub><mi>b</mi><mn>21</mn></msub></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><msub><mi>a</mi><mn>21</mn></msub><msub><mi>b</mi><mn>12</mn></msub><mo>+</mo><msub><mi>a</mi><mn>22</mn></msub><msub><mi>b</mi><mn>22</mn></msub></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+a_{11} &amp; a_{12} \\
+a_{21} &amp; a_{22}
+\end{bmatrix}
+\begin{bmatrix}
+b_{11} &amp; b_{12} \\
+b_{21} &amp; b_{22}
+\end{bmatrix}
+=
+\begin{bmatrix}
+a_{11}b_{11} + a_{12}b_{21} &amp; a_{11}b_{12} + a_{12}b_{22} \\
+a_{21}b_{11} + a_{22}b_{21} &amp; a_{21}b_{12} + a_{22}b_{22}
+\end{bmatrix}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">11</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">21</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">12</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">22</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.95em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span></span></p>
+<p>Euler’s identity:</p>
+<p class="katex-block "><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>e</mi><mrow><mi>i</mi><mi>π</mi></mrow></msup><mo>+</mo><mn>1</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">e^{i\pi} + 1 = 0
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.958em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">iπ</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span></p>
+<hr>
+<h2 id="mermaid-diagrams" tabindex="-1">Mermaid Diagrams</h2>
+<h3 id="flowchart" tabindex="-1">Flowchart</h3>
+<div class="mermaid-container" data-mermaid="graph%20TD%0A%20%20%20%20A%5BOpen%20.md%20file%20via%20file%3A%2F%2F%5D%20--%3E%20B%7BExtension%20active%3F%7D%0A%20%20%20%20B%20--%3E%7CYes%7C%20C%5BContent%20script%20runs%5D%0A%20%20%20%20B%20--%3E%7CNo%7C%20D%5BRaw%20text%20displayed%5D%0A%20%20%20%20C%20--%3E%20E%5BRead%20raw%20markdown%20from%20pre%20tag%5D%0A%20%20%20%20E%20--%3E%20F%5BParse%20with%20markdown-it%20%2B%20plugins%5D%0A%20%20%20%20F%20--%3E%20G%5BReplace%20DOM%20with%20rendered%20HTML%5D%0A%20%20%20%20G%20--%3E%20H%5BApply%20theme%20from%20chrome.storage%5D%0A%20%20%20%20H%20--%3E%20I%5BBuild%20TOC%20sidebar%5D%0A%20%20%20%20I%20--%3E%20J%5BInitialize%20scroll%20spy%5D%0A%20%20%20%20J%20--%3E%20K%5BAttach%20checkbox%20handlers%5D%0A"></div><h3 id="sequence-diagram" tabindex="-1">Sequence Diagram</h3>
+<div class="mermaid-container" data-mermaid="sequenceDiagram%0A%20%20%20%20participant%20U%20as%20User%0A%20%20%20%20participant%20CS%20as%20Content%20Script%0A%20%20%20%20participant%20MD%20as%20markdown-it%0A%20%20%20%20participant%20BG%20as%20Background%20SW%0A%20%20%20%20participant%20ST%20as%20chrome.storage%0A%0A%20%20%20%20U-%3E%3ECS%3A%20Opens%20.md%20file%0A%20%20%20%20CS-%3E%3ECS%3A%20Read%20raw%20text%20from%20%3Cpre%3E%0A%20%20%20%20CS-%3E%3EMD%3A%20Parse%20markdown%0A%20%20%20%20MD--%3E%3ECS%3A%20Return%20HTML%20string%0A%20%20%20%20CS-%3E%3ECS%3A%20Replace%20DOM%0A%20%20%20%20CS-%3E%3EST%3A%20Get%20theme%20preference%0A%20%20%20%20ST--%3E%3ECS%3A%20%22auto%22%20%2F%20%22light%22%20%2F%20%22dark%22%0A%20%20%20%20CS-%3E%3ECS%3A%20Apply%20theme%0A%0A%20%20%20%20U-%3E%3ECS%3A%20Clicks%20checkbox%0A%20%20%20%20CS-%3E%3EBG%3A%20Request%20file%20write%0A%20%20%20%20BG-%3E%3EBG%3A%20Toggle%20line%20in%20.md%20file%0A%20%20%20%20BG--%3E%3ECS%3A%20Write%20confirmed%0A%20%20%20%20CS-%3E%3ECS%3A%20Update%20checkbox%20state%0A"></div><h3 id="state-diagram" tabindex="-1">State Diagram</h3>
+<div class="mermaid-container" data-mermaid="stateDiagram-v2%0A%20%20%20%20%5B*%5D%20--%3E%20Auto%3A%20Default%0A%20%20%20%20Auto%20--%3E%20Light%3A%20User%20toggles%0A%20%20%20%20Light%20--%3E%20Dark%3A%20User%20toggles%0A%20%20%20%20Dark%20--%3E%20Auto%3A%20User%20toggles%0A%0A%20%20%20%20Auto%20--%3E%20ResolvedLight%3A%20System%20prefers%20light%0A%20%20%20%20Auto%20--%3E%20ResolvedDark%3A%20System%20prefers%20dark%0A%0A%20%20%20%20state%20Auto%20%7B%0A%20%20%20%20%20%20%20%20%5B*%5D%20--%3E%20Detecting%0A%20%20%20%20%20%20%20%20Detecting%20--%3E%20Applied%3A%20prefers-color-scheme%20checked%0A%20%20%20%20%7D%0A"></div><h3 id="pie-chart" tabindex="-1">Pie Chart</h3>
+<div class="mermaid-container" data-mermaid="pie%20title%20Extension%20Bundle%20Size%20Breakdown%0A%20%20%20%20%22highlight.js%22%20%3A%20300%0A%20%20%20%20%22markdown-it%20%2B%20plugins%22%20%3A%20250%0A%20%20%20%20%22KaTeX%20CSS%20%2B%20fonts%22%20%3A%201470%0A%20%20%20%20%22Mermaid%22%20%3A%20800%0A%20%20%20%20%22Content%20script%20%2B%20styles%22%20%3A%2050%0A%20%20%20%20%22Background%20script%22%20%3A%203%0A"></div><h3 id="gantt-chart" tabindex="-1">Gantt Chart</h3>
+<div class="mermaid-container" data-mermaid="gantt%0A%20%20%20%20title%20Markdown%20Previewer%20Development%0A%20%20%20%20dateFormat%20YYYY-MM-DD%0A%20%20%20%20axisFormat%20%25b%20%25d%0A%0A%20%20%20%20section%20Foundation%0A%20%20%20%20DEV-001%20Project%20Setup%20%20%20%20%20%20%20%3Adone%2C%20d1%2C%202026-03-20%2C%201d%0A%20%20%20%20DEV-002%20Syntax%20Highlighting%20%3Adone%2C%20d2%2C%20after%20d1%2C%201d%0A%20%20%20%20DEV-003%20Theming%20%20%20%20%20%20%20%20%20%20%20%20%20%3Adone%2C%20d3%2C%20after%20d2%2C%201d%0A%0A%20%20%20%20section%20Features%0A%20%20%20%20DEV-004%20TOC%20Sidebar%20%20%20%20%20%20%20%20%20%3Aactive%2C%20d4%2C%20after%20d3%2C%202d%0A%20%20%20%20DEV-005%20Mermaid%20Diagrams%20%20%20%20%3Ad5%2C%20after%20d3%2C%201d%0A%20%20%20%20DEV-006%20Checkboxes%20%20%20%20%20%20%20%20%20%20%3Ad6%2C%20after%20d3%2C%203d%0A%20%20%20%20DEV-007%20Popup%20%26%20Settings%20%20%20%20%3Ad7%2C%20after%20d3%2C%201d%0A%0A%20%20%20%20section%20Release%0A%20%20%20%20DEV-008%20Polish%20%26%20Packaging%20%20%3Ad8%2C%20after%20d4%2C%202d%0A"></div><hr>
+<h2 id="horizontal-rules" tabindex="-1">Horizontal Rules</h2>
+<p>The three ways to create horizontal rules all render the same:</p>
+<hr>
+<hr>
+<hr>
+<hr>
+<h2 id="nested-%26-complex-content" tabindex="-1">Nested &amp; Complex Content</h2>
+<h3 id="blockquote-with-code-and-list" tabindex="-1">Blockquote with Code and List</h3>
+<blockquote>
+<p><strong>Setup Instructions:</strong></p>
+<ol>
+<li>Install dependencies:<pre class="hljs"><code class="language-bash">npm install
+</code></pre>
+</li>
+<li>Start dev server:<pre class="hljs"><code class="language-bash">npm run dev
+</code></pre>
+</li>
+<li>Load in Chrome and test with this file.</li>
+</ol>
+</blockquote>
+<h3 id="table-inside-alert" tabindex="-1">Table Inside Alert</h3>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Current plugin status:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Version</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>markdown-it</td>
+<td>14.1.1</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>highlight.js</td>
+<td>11.11.1</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>mermaid</td>
+<td>11.13.0</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>katex</td>
+<td>0.16.39</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="list-with-mixed-content" tabindex="-1">List with Mixed Content</h3>
+<ol>
+<li>
+<p><strong>Phase 1</strong>: Setup</p>
+<ul>
+<li>Initialize WXT project</li>
+<li>Configure TypeScript</li>
+<li>Result: <code>npm run build</code> produces valid extension</li>
+</ul>
+</li>
+<li>
+<p><strong>Phase 2</strong>: Core rendering</p>
+<blockquote>
+<p>All plugins must be registered before the first <code>md.render()</code> call.</p>
+</blockquote>
+<pre class="hljs"><code class="language-typescript"><span class="hljs-keyword">const</span> md = <span class="hljs-title function_">createMarkdownRenderer</span>();
+<span class="hljs-keyword">const</span> html = md.<span class="hljs-title function_">render</span>(rawMarkdown);
+</code></pre>
+</li>
+<li>
+<p><strong>Phase 3</strong>: Testing</p>
+<ul class="contains-task-list">
+<li class="task-list-item enabled" data-source-line="624"><label><input class="task-list-item-checkbox"type="checkbox"> Open <code>test-fixtures/showcase.md</code> via <code>file://</code></label></li>
+<li class="task-list-item enabled" data-source-line="625"><label><input class="task-list-item-checkbox"type="checkbox"> Verify all sections render correctly</label></li>
+<li class="task-list-item enabled" data-source-line="626"><label><input class="task-list-item-checkbox"type="checkbox"> Test in both light and dark themes</label></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="regression-checklist" tabindex="-1">Regression Checklist</h2>
+<ul class="contains-task-list">
+<li class="task-list-item enabled" data-source-line="632"><label><input class="task-list-item-checkbox" checked=""type="checkbox"> All headings render with correct sizes and border-bottom</label></li>
+<li class="task-list-item enabled" data-source-line="633"><label><input class="task-list-item-checkbox"type="checkbox"> Bold, italic, strikethrough, mark, sub, sup all display correctly</label></li>
+<li class="task-list-item enabled" data-source-line="634"><label><input class="task-list-item-checkbox"type="checkbox"> Inline code has background color and breaks on long strings</label></li>
+<li class="task-list-item enabled" data-source-line="635"><label><input class="task-list-item-checkbox"type="checkbox"> Code blocks have syntax highlighting and copy button</label></li>
+<li class="task-list-item enabled" data-source-line="636"><label><input class="task-list-item-checkbox"type="checkbox"> Language label shows in top-left of code blocks</label></li>
+<li class="task-list-item enabled" data-source-line="637"><label><input class="task-list-item-checkbox"type="checkbox"> Copy button appears on hover and shows check icon after click</label></li>
+<li class="task-list-item enabled" data-source-line="638"><label><input class="task-list-item-checkbox"type="checkbox"> Tables are scrollable horizontally when they overflow</label></li>
+<li class="task-list-item enabled" data-source-line="639"><label><input class="task-list-item-checkbox"type="checkbox"> Alerts render with correct border colors and backgrounds</label></li>
+<li class="task-list-item enabled" data-source-line="640"><label><input class="task-list-item-checkbox"type="checkbox"> Footnotes link bidirectionally (click to footnote, click back to reference)</label></li>
+<li class="task-list-item enabled" data-source-line="641"><label><input class="task-list-item-checkbox"type="checkbox"> Emoji shortcodes render as emoji characters</label></li>
+<li class="task-list-item enabled" data-source-line="642"><label><input class="task-list-item-checkbox"type="checkbox"> KaTeX math renders inline and as block equations</label></li>
+<li class="task-list-item enabled" data-source-line="643"><label><input class="task-list-item-checkbox"type="checkbox"> Mermaid diagrams render as SVG (when implemented)</label></li>
+<li class="task-list-item enabled" data-source-line="644"><label><input class="task-list-item-checkbox"type="checkbox"> Task list checkboxes are visible and styled</label></li>
+<li class="task-list-item enabled" data-source-line="645"><label><input class="task-list-item-checkbox"type="checkbox"> Theme toggle works: auto → light → dark → auto</label></li>
+<li class="task-list-item enabled" data-source-line="646"><label><input class="task-list-item-checkbox"type="checkbox"> Dark theme applies to all elements including code blocks and alerts</label></li>
+<li class="task-list-item enabled" data-source-line="647"><label><input class="task-list-item-checkbox"type="checkbox"> Page title is set from the first H1</label></li>
+<li class="task-list-item enabled" data-source-line="648"><label><input class="task-list-item-checkbox"type="checkbox"> No FOUC — raw markdown is hidden until rendering completes</label></li>
+<li class="task-list-item enabled" data-source-line="649"><label><input class="task-list-item-checkbox"type="checkbox"> No console errors</label></li>
+</ul>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p><a href="https://github.com/markdown-it/markdown-it">markdown-it</a> — A fast, pluggable markdown parser written in JavaScript. Used by md-reader and many other tools. <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn2" class="footnote-item"><p><a href="https://highlightjs.org/">highlight.js</a> — Syntax highlighting for the web. Supports 190+ languages with automatic detection. <a href="#fnref2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn3" class="footnote-item"><p>Manifest V3 imposes constraints like no remote code execution, event-driven service workers instead of persistent background pages, and <code>declarativeNetRequest</code> instead of <code>webRequestBlocking</code>. <a href="#fnref3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn4" class="footnote-item"><p>This requires either a Native Messaging host or the File System Access API, since Chrome extensions cannot write to the local filesystem directly. <a href="#fnref4" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>

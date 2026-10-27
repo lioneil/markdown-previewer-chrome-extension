@@ -30,3 +30,15 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      # The content script loads on every Markdown page. When an update makes it
+      # outgrow this budget, find out why, then raise the budget on purpose.
+      - name: Check content script size
+        run: |
+          size=$(stat -c %s .output/chrome-mv3/content-scripts/content.js)
+          budget=8200000
+          echo "content.js is $size bytes, budget $budget"
+          if [ "$size" -gt "$budget" ]; then
+            echo "::error::content.js is $size bytes, over the $budget byte budget"
+            exit 1
+          fi
