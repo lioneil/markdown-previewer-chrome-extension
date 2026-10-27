@@ -16,9 +16,13 @@ updates:
         update-types:
           - minor
           - patch
-        # Below 1.0 a minor version can break the API, but Dependabot still
-        # counts it as minor. These packages get a PR each.
         exclude-patterns:
+          # A package that matches two groups goes to the more specific one,
+          # which would be this group, so the markdown-it packages are excluded.
+          - "*markdown-it*"
+          - "@mdit/*"
+          # Below 1.0 a minor version can break the API, but Dependabot still
+          # counts it as minor. These packages get a PR each.
           - wxt
           - katex
           - sharp
