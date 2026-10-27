@@ -6,10 +6,22 @@ updates:
     schedule:
       interval: monthly
     groups:
+      # markdown-it and its plugins require each other's versions through peer
+      # dependencies, so they update together in one PR, major versions included.
+      markdown-it:
+        patterns:
+          - "*markdown-it*"
+          - "@mdit/*"
       npm-minor-patch:
         update-types:
           - minor
           - patch
+        # Below 1.0 a minor version can break the API, but Dependabot still
+        # counts it as minor. These packages get a PR each.
+        exclude-patterns:
+          - wxt
+          - katex
+          - sharp
 
   - package-ecosystem: github-actions
     directory: /
