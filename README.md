@@ -1,3 +1,5 @@
+<img src="logo.svg" alt="" width="64">
+
 # Markdown Previewer
 
 A Chrome extension that renders local Markdown files.
