@@ -31,7 +31,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
     ...plugins,
   };
 
-  const md = new MarkdownIt({
+  const md: MarkdownIt = new MarkdownIt({
     html: true,
     linkify: true,
     typographer: p.typographer,

@@ -192,7 +192,7 @@ export default defineContentScript({
         rerenderMermaidDiagrams(resolveTheme(pref));
       }
       if (changes.wideMode) {
-        document.body.classList.toggle('wide-mode', changes.wideMode.newValue ?? false);
+        document.body.classList.toggle('wide-mode', (changes.wideMode.newValue as boolean) ?? false);
       }
       if (changes.fontFamily) {
         document.body.classList.toggle('font-serif', changes.fontFamily.newValue === 'serif');

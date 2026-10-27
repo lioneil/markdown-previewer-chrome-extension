@@ -49,7 +49,9 @@ export const pluginLabels: Record<keyof PluginSettings, string> = {
 };
 
 export async function getSettings(): Promise<Settings> {
-  const { settings } = await chrome.storage.sync.get('settings');
+  const { settings } = await chrome.storage.sync.get<{
+    settings?: { enabled?: boolean; plugins?: Partial<PluginSettings> };
+  }>('settings');
   if (!settings) return defaultSettings;
   return {
     enabled: settings.enabled ?? defaultSettings.enabled,

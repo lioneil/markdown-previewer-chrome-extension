@@ -407,12 +407,12 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
     fontUpBtn.classList.toggle('disabled', size >= fontSizes[fontSizes.length - 1]);
   }
 
-  chrome.storage.sync.get('fontSize').then(({ fontSize }) => {
+  chrome.storage.sync.get<{ fontSize?: number }>('fontSize').then(({ fontSize }) => {
     applyFontSize(fontSize ?? defaultSize);
   });
 
   fontUpBtn.addEventListener('click', async () => {
-    const { fontSize: current } = await chrome.storage.sync.get('fontSize');
+    const { fontSize: current } = await chrome.storage.sync.get<{ fontSize?: number }>('fontSize');
     const cur = current ?? defaultSize;
     const idx = fontSizes.indexOf(cur);
     if (idx < fontSizes.length - 1) {
@@ -423,7 +423,7 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
   });
 
   fontDownBtn.addEventListener('click', async () => {
-    const { fontSize: current } = await chrome.storage.sync.get('fontSize');
+    const { fontSize: current } = await chrome.storage.sync.get<{ fontSize?: number }>('fontSize');
     const cur = current ?? defaultSize;
     const idx = fontSizes.indexOf(cur);
     if (idx > 0) {
