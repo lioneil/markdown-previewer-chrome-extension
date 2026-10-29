@@ -33,9 +33,9 @@ export function frontmatter(md: MarkdownIt): void {
     if (close >= endLine) return false;
 
     const body = state.getLines(1, close, 0, false);
-    // Plain Markdown can open with a horizontal rule, so only YAML-looking bodies are claimed.
-    // A line starting with two or more hashes counts as a Markdown heading, not a YAML comment.
-    const firstLine = body.split('\n').find((l) => l.trim() !== '' && !/^#(?!#)/.test(l.trim()));
+    // Plain Markdown can open with a horizontal rule, and `# Title` is both a heading and a
+    // YAML comment, so only a body that starts with a key is claimed when it fails to parse.
+    const firstLine = body.split('\n').find((l) => l.trim() !== '');
     const looksLikeYaml = firstLine !== undefined && /^[\w"'-][^:\n]*:(\s|$)/.test(firstLine);
     let data: unknown;
     try {

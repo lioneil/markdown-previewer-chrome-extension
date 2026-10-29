@@ -109,6 +109,12 @@ describe('frontmatter', () => {
     expect(html).not.toContain('language-yaml');
   });
 
+  it('leaves a top-level heading followed by prose to markdown', () => {
+    const html = render('---\n# Title\nSome text: with colon\n- item\n---\n');
+    expect(html).toContain('<h1');
+    expect(html).not.toContain('language-yaml');
+  });
+
   it('prints scalars exactly as written', () => {
     const html = render('---\nversion: 1.10\nid: 007\nflag: True\n---\n');
     expect(html).toContain('>1.10<');
