@@ -11,6 +11,7 @@ import anchor from 'markdown-it-anchor';
 import multimdTable from 'markdown-it-multimd-table';
 import { alert } from '@mdit/plugin-alert';
 import katex from '@traptitech/markdown-it-katex';
+import { frontmatter } from './frontmatter';
 import type { PluginSettings } from './settings';
 
 export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): MarkdownIt {
@@ -51,6 +52,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
     },
   });
 
+  md.use(frontmatter);
   md.use(taskLists, { enabled: true, label: true });
 
   // Record the line each task item came from, so toggling a checkbox can write
