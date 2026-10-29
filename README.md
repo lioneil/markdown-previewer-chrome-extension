@@ -25,6 +25,7 @@ Works in Chrome and Brave.
 - GitHub alerts (`[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`)
 - Tables with colspan, rowspan and multi-line cells
 - Footnotes, definition lists, emoji shortcodes, subscript, superscript and `==highlight==`
+- YAML frontmatter shown as a metadata card
 - Clickable task list checkboxes, with **Save a Copy** to download the updated file
 - Outline sidebar with search
 - Light, dark and auto themes

@@ -1,3 +1,11 @@
+---
+title: Markdown Previewer feature showcase
+type: reference
+labels: [Showcase, QA checklist]
+source: https://github.com/lioneil/markdown-previewer-chrome-extension
+updated: 2026-10-29T22:14:41+08:00
+---
+
 # Markdown Previewer — Feature Showcase
 
 > [!TIP]

@@ -986,6 +986,56 @@ body.md-preview.font-serif .md-sidebar {
   background: var(--color-alert-caution-bg);
 }
 
+/* ── Frontmatter ── */
+.md-body .frontmatter {
+  margin: 0 0 24px;
+  padding: 14px 20px;
+  background: var(--color-code-block-bg);
+  border-radius: 10px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.875em;
+  line-height: 1.7;
+}
+
+.md-body .frontmatter-title {
+  margin: 0 0 4px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.md-body .frontmatter ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.md-body .frontmatter li {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.md-body .frontmatter li::marker {
+  color: var(--color-text-secondary);
+}
+
+.md-body .frontmatter-value {
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.md-body .frontmatter-chip {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--color-code-bg);
+  color: var(--color-link);
+  line-height: 1.6;
+}
+
+.md-body .frontmatter code {
+  font-size: 1em;
+}
+
 /* ── Checkbox Save Toast ── */
 .checkbox-save-bar {
   position: fixed;
