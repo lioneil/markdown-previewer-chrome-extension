@@ -52,7 +52,7 @@ describe('frontmatter', () => {
 
   it('shows nested mappings as inline JSON', () => {
     expect(render('---\nauthor:\n  name: Ann\n  id: 7\n---\n')).toContain(
-      '<code>{&quot;name&quot;:&quot;Ann&quot;,&quot;id&quot;:7}</code>'
+      '<code>{&quot;name&quot;:&quot;Ann&quot;,&quot;id&quot;:&quot;7&quot;}</code>'
     );
   });
 
@@ -94,5 +94,25 @@ describe('frontmatter', () => {
     const html = render('---\na: 1\nb: 2\nc: 3\n---\n\n- [ ] one\n- [x] two\n');
     const lines = [...html.matchAll(/data-source-line="(\d+)"/g)].map((m) => Number(m[1]));
     expect(lines).toEqual([6, 7]);
+  });
+
+  it('leaves a heading between two rules to markdown', () => {
+    const html = render('---\n# Title\n---\n');
+    expect(html).toContain('<h1');
+    expect(html).not.toContain('language-yaml');
+    expect(html).not.toContain('frontmatter');
+  });
+
+  it('leaves prose between two rules to markdown', () => {
+    const html = render('---\n## Intro\nSome text: with colon\n- item\n---\n\nmore\n');
+    expect(html).toContain('<h2');
+    expect(html).not.toContain('language-yaml');
+  });
+
+  it('prints scalars exactly as written', () => {
+    const html = render('---\nversion: 1.10\nid: 007\nflag: True\n---\n');
+    expect(html).toContain('>1.10<');
+    expect(html).toContain('>007<');
+    expect(html).toContain('>True<');
   });
 });

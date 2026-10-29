@@ -1020,6 +1020,7 @@ body.md-preview.font-serif .md-sidebar {
 .md-body .frontmatter-value {
   color: var(--color-text);
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .md-body .frontmatter-chip {

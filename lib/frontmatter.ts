@@ -1,5 +1,5 @@
 import type { MarkdownIt, StateBlock } from 'markdown-it';
-import { load, CORE_SCHEMA } from 'js-yaml';
+import { load, FAILSAFE_SCHEMA } from 'js-yaml';
 
 type Escape = (s: string) => string;
 
@@ -33,10 +33,15 @@ export function frontmatter(md: MarkdownIt): void {
     if (close >= endLine) return false;
 
     const body = state.getLines(1, close, 0, false);
+    // Plain Markdown can open with a horizontal rule, so only YAML-looking bodies are claimed.
+    // A line starting with two or more hashes counts as a Markdown heading, not a YAML comment.
+    const firstLine = body.split('\n').find((l) => l.trim() !== '' && !/^#(?!#)/.test(l.trim()));
+    const looksLikeYaml = firstLine !== undefined && /^[\w"'-][^:\n]*:(\s|$)/.test(firstLine);
     let data: unknown;
     try {
-      data = body.trim() === '' ? null : load(body, { schema: CORE_SCHEMA });
+      data = body.trim() === '' ? null : load(body, { schema: FAILSAFE_SCHEMA });
     } catch {
+      if (!looksLikeYaml) return false;
       if (silent) return true;
       // Show the broken block as source so the reader can see what to fix.
       const token = state.push('fence', 'code', 0);
