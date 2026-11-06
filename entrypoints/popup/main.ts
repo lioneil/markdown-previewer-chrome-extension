@@ -69,7 +69,7 @@ async function init() {
     const checked = toggleAll.checked;
     pluginInputs.forEach((input, i) => {
       input.checked = checked;
-      settings.plugins[pluginKeys[i]] = checked;
+      settings.plugins[pluginKeys[i]!] = checked;
     });
     await saveSettings(settings);
   });
@@ -80,7 +80,7 @@ async function init() {
     await chrome.storage.sync.remove(['fontSize', 'wideMode', 'theme', 'sidebarCollapsed', 'fontFamily']);
     enableToggle.checked = defaultSettings.enabled;
     pluginInputs.forEach((input, i) => {
-      input.checked = defaultSettings.plugins[pluginKeys[i]];
+      input.checked = defaultSettings.plugins[pluginKeys[i]!];
     });
     updateToggleAll();
   });

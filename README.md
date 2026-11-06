@@ -59,7 +59,7 @@ git clone https://github.com/lioneil/markdown-previewer-chrome-extension.git
 cd markdown-previewer-chrome-extension
 npm install
 npm run dev     # development build with hot reload
-npm run build   # production build in .output/chrome-mv3
+npm run build   # production build in .output/chrome-mv3 (npm run dev writes .output/chrome-mv3-dev)
 npm test
 ```
 

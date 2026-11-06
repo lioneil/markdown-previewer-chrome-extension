@@ -31,6 +31,7 @@ function collectCheckboxes(inputs: NodeListOf<HTMLInputElement>): CheckboxEntry[
 function toggleLine(source: string, lineNumber: number, checked: boolean): string {
   const lines = source.split('\n');
   const line = lines[lineNumber];
+  if (line === undefined) return source;
   if (checked) {
     lines[lineNumber] = line.replace('[ ]', '[x]');
   } else {
@@ -157,7 +158,9 @@ export function initCheckboxes(rawMarkdown: string): void {
   entries.forEach((entry) => {
     entry.inputEl.addEventListener('change', () => {
       const checked = entry.inputEl.checked;
-      currentSource = toggleLine(currentSource, entry.lineNumber, checked);
+      const next = toggleLine(currentSource, entry.lineNumber, checked);
+      if (next === currentSource) return;
+      currentSource = next;
       dirty = true;
       showSaveBar();
     });

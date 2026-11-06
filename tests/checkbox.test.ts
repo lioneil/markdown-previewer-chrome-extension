@@ -36,19 +36,19 @@ describe('save bar', () => {
   it('appears when an unordered checkbox is toggled', async () => {
     const { boxes, bar } = await mount('- [ ] one\n');
     expect(bar.classList.contains('visible')).toBe(false);
-    toggle(boxes[0]);
+    toggle(boxes[0]!);
     expect(bar.classList.contains('visible')).toBe(true);
   });
 
   it('appears when an ordered checkbox is toggled', async () => {
     const { boxes, bar } = await mount('1. [ ] one\n2. [ ] two\n');
-    toggle(boxes[0]);
+    toggle(boxes[0]!);
     expect(bar.classList.contains('visible')).toBe(true);
   });
 
   it('appears when a checkbox inside a blockquote is toggled', async () => {
     const { boxes, bar } = await mount('> - [ ] one\n');
-    toggle(boxes[0]);
+    toggle(boxes[0]!);
     expect(bar.classList.contains('visible')).toBe(true);
   });
 });
@@ -57,7 +57,7 @@ describe('saved source', () => {
   it('checks the line the ordered item came from', async () => {
     const md = '# Doc\n\n1. [ ] one\n2. [ ] two\n';
     const { boxes, save } = await mount(md);
-    toggle(boxes[1]);
+    toggle(boxes[1]!);
     save.click();
     expect(decodeSaved()).toBe('# Doc\n\n1. [ ] one\n2. [x] two\n');
   });
@@ -65,7 +65,7 @@ describe('saved source', () => {
   it('unchecks a checked item', async () => {
     const md = '- [x] one\n';
     const { boxes, save } = await mount(md);
-    toggle(boxes[0]);
+    toggle(boxes[0]!);
     save.click();
     expect(decodeSaved()).toBe('- [ ] one\n');
   });
@@ -74,7 +74,7 @@ describe('saved source', () => {
     const md = ['```markdown', '- [ ] fenced', '```', '', '- [ ] real', ''].join('\n');
     const { boxes, save } = await mount(md);
     expect(boxes).toHaveLength(1);
-    toggle(boxes[0]);
+    toggle(boxes[0]!);
     save.click();
     expect(decodeSaved()).toBe(
       ['```markdown', '- [ ] fenced', '```', '', '- [x] real', ''].join('\n')
@@ -84,8 +84,16 @@ describe('saved source', () => {
   it('tracks the right line across mixed list styles', async () => {
     const md = ['- [ ] a', '', '1. [ ] b', '', '> * [ ] c', ''].join('\n');
     const { boxes, save } = await mount(md);
-    toggle(boxes[2]);
+    toggle(boxes[2]!);
     save.click();
     expect(decodeSaved()).toBe(['- [ ] a', '', '1. [ ] b', '', '> * [x] c', ''].join('\n'));
+  });
+});
+
+describe('source with lone carriage returns', () => {
+  it('leaves the save bar hidden when the toggled line is not in the source', async () => {
+    const { boxes, bar } = await mount('# T\r\r- [ ] a\r- [ ] b\r');
+    toggle(boxes[1]!);
+    expect(bar.classList.contains('visible')).toBe(false);
   });
 });
