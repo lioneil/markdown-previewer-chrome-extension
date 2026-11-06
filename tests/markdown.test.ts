@@ -106,7 +106,31 @@ describe('math', () => {
     expect(html).toContain('$$x$$ trailing');
   });
 
+  it('keeps rendering the page when KaTeX throws something other than a parse error', () => {
+    const deep = `$${'{'.repeat(2000)}x${'}'.repeat(2000)}$`;
+    const inline = render(`before\n\nsee ${deep} here\n\nnext paragraph`);
+    expect(inline).toContain('katex-error');
+    expect(inline).toContain('next paragraph');
+    const block = render(`$$${'{'.repeat(2000)}x${'}'.repeat(2000)}$$\n\nnext paragraph`);
+    expect(block).toContain("<p class='katex-block katex-error'");
+    expect(block).toContain('next paragraph');
+  });
+
+  it('renders math wrapped in asterisks but not in underscores', () => {
+    expect(render('*$x$*')).toContain('<em><span class="katex">');
+    expect(render('_$x$_')).toBe('<p><em>$x$</em></p>\n');
+  });
+
+  it('does not let an unclosed $$ swallow the rest of the document', () => {
+    const html = render('$$\nx\n\nnext paragraph\n\n# Heading');
+    expect(html).toContain('<h1');
+    expect(html).toContain('next paragraph');
+    expect(html).not.toContain('katex');
+  });
+
   it('is off when the katex setting is off', () => {
-    expect(createMarkdownRenderer({ katex: false }).render('$x^2$')).not.toContain('katex');
+    const html = createMarkdownRenderer({ katex: false }).render('$x^2$');
+    expect(html).not.toContain('katex');
+    expect(html).toContain('$x^2$');
   });
 });

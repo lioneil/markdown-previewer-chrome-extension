@@ -98,12 +98,21 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
     },
   });
   if (p.katex) {
-    md.use(tex, {
-      render: (content, displayMode) =>
-        displayMode
-          ? `<p class='katex-block'>${katex.renderToString(content, { displayMode, throwOnError: false })}</p>\n`
-          : katex.renderToString(content, { displayMode, throwOnError: false }),
-    });
+    // throwOnError: false only covers parse errors. Anything else KaTeX throws
+    // (a stack overflow on absurdly nested braces, say) must not blank the page.
+    const renderMath = (content: string, displayMode: boolean) => {
+      try {
+        const html = katex.renderToString(content, { displayMode, throwOnError: false });
+        return displayMode ? `<p class='katex-block'>${html}</p>\n` : html;
+      } catch (error) {
+        const title = md.utils.escapeHtml(String(error));
+        const source = md.utils.escapeHtml(content);
+        return displayMode
+          ? `<p class='katex-block katex-error' title="${title}">${source}</p>\n`
+          : `<span class='katex-error' title="${title}">${source}</span>`;
+      }
+    };
+    md.use(tex, { render: renderMath });
   }
 
   // Override fence renderer for mermaid blocks
