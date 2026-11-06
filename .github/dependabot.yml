@@ -5,6 +5,10 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Wait a week after a release before proposing it. A hijacked release is
+    # usually caught and pulled within days, and patch bumps merge on their own.
+    cooldown:
+      default-days: 7
     groups:
       # markdown-it and its plugins require each other's versions through peer
       # dependencies, so they update together in one PR, major versions included.
@@ -31,3 +35,7 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Wait a week after a release before proposing it. A hijacked release is
+    # usually caught and pulled within days, and patch bumps merge on their own.
+    cooldown:
+      default-days: 7
