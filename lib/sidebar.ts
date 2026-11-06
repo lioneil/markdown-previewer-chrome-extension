@@ -441,7 +441,9 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
     await chrome.storage.sync.set({ sidebarCollapsed: collapsed });
   });
 
-  // Restore collapsed state
+  // Restore collapsed state. A narrow screen always starts collapsed, since the
+  // open sidebar would take most of the page.
+  if (window.matchMedia('(max-width: 768px)').matches) sidebar.classList.add('collapsed');
   chrome.storage.sync.get('sidebarCollapsed').then(({ sidebarCollapsed }) => {
     if (sidebarCollapsed) sidebar.classList.add('collapsed');
   });

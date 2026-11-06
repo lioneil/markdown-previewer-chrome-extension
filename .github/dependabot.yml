@@ -5,6 +5,15 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Wait a week after a release before proposing it. A hijacked release is
+    # usually caught and pulled within days, and patch bumps merge on their own.
+    cooldown:
+      default-days: 7
+    ignore:
+      # TypeScript 7 fails the type check and is not yet known to work with
+      # WXT and Vitest. Remove this rule when upgrading to it by hand.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     groups:
       # markdown-it and its plugins require each other's versions through peer
       # dependencies, so they update together in one PR, major versions included.
@@ -31,3 +40,7 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    # Wait a week after a release before proposing it. A hijacked release is
+    # usually caught and pulled within days, and patch bumps merge on their own.
+    cooldown:
+      default-days: 7

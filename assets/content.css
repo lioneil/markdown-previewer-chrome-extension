@@ -125,8 +125,12 @@ body.md-preview {
 }
 
 /* ── Layout ── */
+/* Both are flex items, which default to min-width: auto and grow to fit the
+   widest code line or table. Zero lets them shrink to the viewport so those
+   blocks scroll inside themselves. */
 .md-content {
   flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -138,6 +142,7 @@ body.md-preview {
 .md-body {
   max-width: var(--content-max-width);
   width: 100%;
+  min-width: 0;
 }
 
 body.wide-mode .md-body {
@@ -896,6 +901,13 @@ body.md-preview.font-serif .md-sidebar {
 .md-body .mermaid-error code {
   font-size: 0.8125em;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* ── Math ── */
+/* KaTeX keeps display math on one line, so a wide equation scrolls. */
+.md-body .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 /* ── Video Embeds ── */
