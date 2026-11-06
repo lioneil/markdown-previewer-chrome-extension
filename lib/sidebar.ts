@@ -39,10 +39,10 @@ function fuzzyMatch(text: string, query: string): string | null {
   const parts: string[] = [];
   for (let i = 0; i < text.length; i++) {
     if (qi < q.length && lower[i] === q[qi]) {
-      parts.push(`<mark class="search-highlight">${escapeHtml(text[i])}</mark>`);
+      parts.push(`<mark class="search-highlight">${escapeHtml(text[i]!)}</mark>`);
       qi++;
     } else {
-      parts.push(escapeHtml(text[i]));
+      parts.push(escapeHtml(text[i]!));
     }
   }
   return qi === q.length ? parts.join('') : null;
@@ -123,17 +123,17 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
 
   // Check if a heading at index i has children (deeper headings following it)
   function hasChildren(i: number): boolean {
-    const level = parseInt(headingList[i].tagName[1]);
+    const level = parseInt(headingList[i]!.tagName[1]!);
     if (i + 1 >= headingList.length) return false;
-    return parseInt(headingList[i + 1].tagName[1]) > level;
+    return parseInt(headingList[i + 1]!.tagName[1]!) > level;
   }
 
   // Build nested tree using a stack-based approach
   function buildTree(parent: HTMLElement, startIdx: number, parentLevel: number): number {
     let i = startIdx;
     while (i < headingList.length) {
-      const h = headingList[i];
-      const level = parseInt(h.tagName[1]);
+      const h = headingList[i]!;
+      const level = parseInt(h.tagName[1]!);
 
       // If this heading is at a shallower or equal level to parent, we're done with this group
       if (level <= parentLevel && i > startIdx) break;
@@ -236,14 +236,14 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
 
     // Remove previous focus
     if (focusedIndex >= 0 && focusedIndex < visible.length) {
-      visible[focusedIndex].el.classList.remove('focused');
+      visible[focusedIndex]!.el.classList.remove('focused');
     }
 
     // Clamp index
     focusedIndex = Math.max(0, Math.min(index, visible.length - 1));
 
     // Apply focus
-    const entry = visible[focusedIndex];
+    const entry = visible[focusedIndex]!;
     entry.el.classList.add('focused');
     entry.el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
@@ -256,7 +256,7 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
   function navigateToFocused() {
     const visible = getVisibleLinks();
     if (focusedIndex >= 0 && focusedIndex < visible.length) {
-      visible[focusedIndex].heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      visible[focusedIndex]!.heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -403,8 +403,8 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
 
   function applyFontSize(size: number) {
     document.body.style.fontSize = `${size}px`;
-    fontDownBtn.classList.toggle('disabled', size <= fontSizes[0]);
-    fontUpBtn.classList.toggle('disabled', size >= fontSizes[fontSizes.length - 1]);
+    fontDownBtn.classList.toggle('disabled', size <= fontSizes[0]!);
+    fontUpBtn.classList.toggle('disabled', size >= fontSizes[fontSizes.length - 1]!);
   }
 
   chrome.storage.sync.get<{ fontSize?: number }>('fontSize').then(({ fontSize }) => {
@@ -416,7 +416,7 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
     const cur = current ?? defaultSize;
     const idx = fontSizes.indexOf(cur);
     if (idx < fontSizes.length - 1) {
-      const next = fontSizes[idx + 1];
+      const next = fontSizes[idx + 1]!;
       applyFontSize(next);
       await chrome.storage.sync.set({ fontSize: next });
     }
@@ -427,7 +427,7 @@ export function buildSidebar(contentEl: HTMLElement): HTMLElement {
     const cur = current ?? defaultSize;
     const idx = fontSizes.indexOf(cur);
     if (idx > 0) {
-      const next = fontSizes[idx - 1];
+      const next = fontSizes[idx - 1]!;
       applyFontSize(next);
       await chrome.storage.sync.set({ fontSize: next });
     }
@@ -520,7 +520,7 @@ export function initScrollSpy(sidebar: HTMLElement): void {
     }
     // If none are below top (scrolled past all), activate the last one
     if (!currentActive && links.length > 0) {
-      setActive(links[links.length - 1]);
+      setActive(links[links.length - 1]!);
     }
   });
 }

@@ -20,7 +20,7 @@ export function enhanceCodeBlocks(root: ParentNode = document): void {
     if (langClass) {
       const label = document.createElement('span');
       label.className = 'code-lang';
-      label.textContent = langClass[1];
+      label.textContent = langClass[1]!;
       well.appendChild(label);
     }
 

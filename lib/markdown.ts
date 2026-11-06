@@ -92,8 +92,8 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
   if (p.alerts) md.use(alert, {
     // Title the alert the way GitHub does ("Note"), whatever case the source uses.
     titleRenderer: (tokens, idx) => {
-      const name = tokens[idx].markup;
-      return `<p class="markdown-alert-title">${name[0].toUpperCase()}${name.slice(1)}</p>\n`;
+      const name = tokens[idx]!.markup;
+      return `<p class="markdown-alert-title">${name.charAt(0).toUpperCase()}${name.slice(1)}</p>\n`;
     },
   });
   if (p.katex) md.use(katex, { throwOnError: false });
@@ -102,7 +102,7 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
   if (p.mermaid) {
     const defaultFence = md.renderer.rules.fence!.bind(md.renderer.rules);
     md.renderer.rules.fence = (tokens, idx, options, env, self) => {
-      const token = tokens[idx];
+      const token = tokens[idx]!;
       if (token.info.trim().toLowerCase() === 'mermaid') {
         const encoded = encodeURIComponent(token.content);
         return `<div class="mermaid-container" data-mermaid="${encoded}"></div>`;
