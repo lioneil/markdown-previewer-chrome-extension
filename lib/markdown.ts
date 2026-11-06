@@ -10,7 +10,8 @@ import deflist from 'markdown-it-deflist';
 import anchor from 'markdown-it-anchor';
 import multimdTable from 'markdown-it-multimd-table';
 import { alert } from '@mdit/plugin-alert';
-import katex from '@traptitech/markdown-it-katex';
+import { tex } from '@mdit/plugin-tex';
+import katex from 'katex';
 import { frontmatter } from './frontmatter';
 import type { PluginSettings } from './settings';
 
@@ -96,7 +97,23 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
       return `<p class="markdown-alert-title">${name.charAt(0).toUpperCase()}${name.slice(1)}</p>\n`;
     },
   });
-  if (p.katex) md.use(katex, { throwOnError: false });
+  if (p.katex) {
+    // throwOnError: false only covers parse errors. Anything else KaTeX throws
+    // (a stack overflow on absurdly nested braces, say) must not blank the page.
+    const renderMath = (content: string, displayMode: boolean) => {
+      try {
+        const html = katex.renderToString(content, { displayMode, throwOnError: false });
+        return displayMode ? `<p class='katex-block'>${html}</p>\n` : html;
+      } catch (error) {
+        const title = md.utils.escapeHtml(String(error));
+        const source = md.utils.escapeHtml(content);
+        return displayMode
+          ? `<p class='katex-block katex-error' title="${title}">${source}</p>\n`
+          : `<span class='katex-error' title="${title}">${source}</span>`;
+      }
+    };
+    md.use(tex, { render: renderMath });
+  }
 
   // Override fence renderer for mermaid blocks
   if (p.mermaid) {
