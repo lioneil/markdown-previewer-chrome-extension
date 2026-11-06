@@ -10,7 +10,8 @@ import deflist from 'markdown-it-deflist';
 import anchor from 'markdown-it-anchor';
 import multimdTable from 'markdown-it-multimd-table';
 import { alert } from '@mdit/plugin-alert';
-import katex from '@traptitech/markdown-it-katex';
+import { tex } from '@mdit/plugin-tex';
+import katex from 'katex';
 import { frontmatter } from './frontmatter';
 import type { PluginSettings } from './settings';
 
@@ -96,7 +97,14 @@ export function createMarkdownRenderer(plugins?: Partial<PluginSettings>): Markd
       return `<p class="markdown-alert-title">${name[0].toUpperCase()}${name.slice(1)}</p>\n`;
     },
   });
-  if (p.katex) md.use(katex, { throwOnError: false });
+  if (p.katex) {
+    md.use(tex, {
+      render: (content, displayMode) =>
+        displayMode
+          ? `<p class='katex-block'>${katex.renderToString(content, { displayMode, throwOnError: false })}</p>\n`
+          : katex.renderToString(content, { displayMode, throwOnError: false }),
+    });
+  }
 
   // Override fence renderer for mermaid blocks
   if (p.mermaid) {
