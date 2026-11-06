@@ -89,3 +89,11 @@ describe('saved source', () => {
     expect(decodeSaved()).toBe(['- [ ] a', '', '1. [ ] b', '', '> * [x] c', ''].join('\n'));
   });
 });
+
+describe('source with lone carriage returns', () => {
+  it('leaves the save bar hidden when the toggled line is not in the source', async () => {
+    const { boxes, bar } = await mount('# T\r\r- [ ] a\r- [ ] b\r');
+    toggle(boxes[1]!);
+    expect(bar.classList.contains('visible')).toBe(false);
+  });
+});

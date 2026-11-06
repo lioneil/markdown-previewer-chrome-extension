@@ -158,7 +158,9 @@ export function initCheckboxes(rawMarkdown: string): void {
   entries.forEach((entry) => {
     entry.inputEl.addEventListener('change', () => {
       const checked = entry.inputEl.checked;
-      currentSource = toggleLine(currentSource, entry.lineNumber, checked);
+      const next = toggleLine(currentSource, entry.lineNumber, checked);
+      if (next === currentSource) return;
+      currentSource = next;
       dirty = true;
       showSaveBar();
     });
