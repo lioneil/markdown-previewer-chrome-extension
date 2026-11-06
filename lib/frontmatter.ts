@@ -66,7 +66,7 @@ export function frontmatter(md: MarkdownIt): void {
   });
 
   md.renderer.rules.frontmatter = (tokens, idx) => {
-    const entries = Object.entries(tokens[idx].meta as Record<string, unknown>);
+    const entries = Object.entries(tokens[idx]!.meta as Record<string, unknown>);
     if (entries.length === 0) return '';
     const escape = md.utils.escapeHtml;
     const rows = entries

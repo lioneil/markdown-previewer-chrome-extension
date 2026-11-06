@@ -31,6 +31,7 @@ function collectCheckboxes(inputs: NodeListOf<HTMLInputElement>): CheckboxEntry[
 function toggleLine(source: string, lineNumber: number, checked: boolean): string {
   const lines = source.split('\n');
   const line = lines[lineNumber];
+  if (line === undefined) return source;
   if (checked) {
     lines[lineNumber] = line.replace('[ ]', '[x]');
   } else {

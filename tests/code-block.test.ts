@@ -66,7 +66,7 @@ describe('code block copy button', () => {
     expect(check!.getAttribute('d')).toBe('M4 12 9 17 20 6');
     btn.click();
     expect(btn.querySelector('.copy-icon-copy')).not.toBeNull();
-    const rule = [...document.styleSheets[0].cssRules].find(
+    const rule = [...document.styleSheets[0]!.cssRules].find(
       (entry) => entry instanceof CSSStyleRule && entry.selectorText === '.md-body .copy-btn.copied .copy-icon-check path',
     ) as CSSStyleRule | undefined;
     expect(rule?.style.animation).toContain('copy-check-draw');
@@ -76,9 +76,9 @@ describe('code block copy button', () => {
     const writeText = clipboard();
     mount('```js\nconst x = 1;\n```\n\n```\nplain\n```\n');
     const buttons = [...document.querySelectorAll<HTMLButtonElement>('.copy-btn')];
-    buttons[1].click();
+    buttons[1]!.click();
     expect(writeText).toHaveBeenCalledWith('plain\n');
-    expect(buttons[1].classList.contains('copied')).toBe(true);
+    expect(buttons[1]!.classList.contains('copied')).toBe(true);
   });
 
   it('does not add a second button when run again', () => {
